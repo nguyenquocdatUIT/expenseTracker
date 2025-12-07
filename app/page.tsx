@@ -59,23 +59,23 @@ export default function Home() {
       </div>
 
       <div className="flex gap-4 mt-8">
-        <Button
-          as={Link}
-          href="/auth/register"
-          size="lg"
-          className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all px-8"
-        >
-          Bắt đầu miễn phí
-        </Button>
-        <Button
-          as={Link}
-          href="/auth/signin"
-          size="lg"
-          variant="bordered"
-          className="border-2 border-sky-500 text-sky-600 font-semibold hover:bg-sky-50 dark:hover:bg-sky-950 transition-all px-8"
-        >
-          Đăng nhập
-        </Button>
+        <Link href="/auth/register">
+          <Button
+            size="lg"
+            className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all px-8"
+          >
+            Bắt đầu miễn phí
+          </Button>
+        </Link>
+        <Link href="/auth/signin">
+          <Button
+            size="lg"
+            variant="bordered"
+            className="border-2 border-sky-500 text-sky-600 font-semibold hover:bg-sky-50 dark:hover:bg-sky-950 transition-all px-8"
+          >
+            Đăng nhập
+          </Button>
+        </Link>
       </div>
     </div>
   );

@@ -62,13 +62,13 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
         <NavbarItem className="hidden md:flex">
-          <Button
-            as={NextLink}
-            className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
-            href="/auth/signin"
-          >
-            Đăng nhập
-          </Button>
+          <NextLink href="/auth/signin">
+            <Button
+              className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
+            >
+              Đăng nhập
+            </Button>
+          </NextLink>
         </NavbarItem>
       </NavbarContent>
 
