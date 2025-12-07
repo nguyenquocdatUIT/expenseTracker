@@ -14,7 +14,7 @@ node_modules/
 .next/
 
 # Generated API
-lib/api/generated/
+# lib/api/generated/
 
 # Misc
 .DS_Store
