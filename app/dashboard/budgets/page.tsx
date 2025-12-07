@@ -21,6 +21,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format, addMonths } from "date-fns";
+import {
+  useGetBudgetsApiV1BudgetsGet,
+  useCreateBudgetApiV1BudgetsPost,
+  useUpdateBudgetApiV1BudgetsBudgetIdPatch,
+  useDeleteBudgetApiV1BudgetsBudgetIdDelete,
+  useGetCategoriesApiV1CategoriesGet,
+} from "@/lib/api";
 
 const budgetSchema = z.object({
   name: z.string().min(1, "Tên ngân sách là bắt buộc"),
@@ -44,8 +51,6 @@ const budgetSchema = z.object({
 type BudgetFormData = z.infer<typeof budgetSchema>;
 
 export default function BudgetsPage() {
-  const [budgets, setBudgets] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingBudget, setEditingBudget] = useState<any>(null);
   const [filter, setFilter] = useState<"all" | "active">("active");
@@ -70,86 +75,92 @@ export default function BudgetsPage() {
     },
   });
 
+  // Use generated API hooks
+  const {
+    data: budgetsData,
+    isLoading: budgetsLoading,
+    refetch: refetchBudgets,
+  } = useGetBudgetsApiV1BudgetsGet();
+
+  const { data: categoriesData, isLoading: categoriesLoading } =
+    useGetCategoriesApiV1CategoriesGet();
+
+  const { mutate: createBudget, isPending: isCreating } =
+    useCreateBudgetApiV1BudgetsPost();
+
+  const { mutate: updateBudget } = useUpdateBudgetApiV1BudgetsBudgetIdPatch();
+
+  const { mutate: deleteBudget } = useDeleteBudgetApiV1BudgetsBudgetIdDelete();
+
   useEffect(() => {
-    fetchBudgets();
-    fetchCategories();
-  }, [filter]);
+    setLoading(budgetsLoading || categoriesLoading);
+  }, [budgetsLoading, categoriesLoading]);
 
-  const fetchBudgets = async () => {
-    try {
-      setLoading(true);
-      // TODO: Kết nối API thật sau
-      await new Promise((resolve) => setTimeout(resolve, 300));
+  const displayBudgets = budgetsData || [];
+  const displayCategories = categoriesData || [];
+  const [toasts, setToasts] = useState<
+    { id: number; type: "success" | "error"; message: string }[]
+  >([]);
+  const [isSaving, setIsSaving] = useState(false);
 
-      const dummyBudgets = [
-        {
-          id: "1",
-          name: "Ngân sách ăn uống",
-          amount: 5000000,
-          spent: 3500000,
-          period: "MONTHLY",
-          startDate: new Date(),
-          category: { name: "Ăn uống", icon: "🍕" },
-          alertEnabled: true,
-          alertAt: 80,
-          isRecurring: true,
-          progress: 70,
-          isOverBudget: false,
-          shouldAlert: false,
-          remaining: 1500000,
-        },
-        {
-          id: "2",
-          name: "Ngân sách di chuyển",
-          amount: 3000000,
-          spent: 2700000,
-          period: "MONTHLY",
-          startDate: new Date(),
-          category: { name: "Di chuyển", icon: "🚗" },
-          alertEnabled: true,
-          alertAt: 80,
-          isRecurring: true,
-          progress: 90,
-          isOverBudget: false,
-          shouldAlert: true,
-          remaining: 300000,
-        },
-      ];
-
-      setBudgets(dummyBudgets);
-    } catch (error) {
-      console.error("Error fetching budgets:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      // TODO: Kết nối API thật sau
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      const dummyCategories = [
-        { id: "1", name: "Ăn uống", type: "EXPENSE", icon: "🍕" },
-        { id: "2", name: "Di chuyển", type: "EXPENSE", icon: "🚗" },
-        { id: "3", name: "Mua sắm", type: "EXPENSE", icon: "🛍️" },
-      ];
-
-      setCategories(dummyCategories);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
+  const pushToast = (type: "success" | "error", message: string) => {
+    const id = Date.now() + Math.floor(Math.random() * 1000);
+    setToasts((t) => [...t, { id, type, message }]);
+    setTimeout(() => {
+      setToasts((t) => t.filter((x) => x.id !== id));
+    }, 3500);
   };
 
   const onSubmit = async (data: BudgetFormData) => {
     try {
-      // TODO: Kết nối API thật sau
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      // Map form data to API payload
+      const payload = {
+        category_id: Number(data.categoryId),
+        amount_limit: Number(data.amount),
+        period_type: data.period as any,
+        start_date: data.startDate || undefined,
+        end_date: data.endDate || undefined,
+      };
 
-      onClose();
-      reset();
-      setEditingBudget(null);
-      fetchBudgets();
+      setIsSaving(true);
+      if (editingBudget && editingBudget.id) {
+        updateBudget(
+          { budgetId: Number(editingBudget.id), data: payload },
+          {
+            onSuccess: () => {
+              onClose();
+              reset();
+              setEditingBudget(null);
+              refetchBudgets();
+              pushToast("success", "Cập nhật ngân sách thành công");
+              setIsSaving(false);
+            },
+            onError: (err) => {
+              console.error("Update budget error:", err);
+              pushToast("error", "Cập nhật ngân sách thất bại");
+              setIsSaving(false);
+            },
+          }
+        );
+      } else {
+        createBudget(
+          { data: payload },
+          {
+            onSuccess: () => {
+              onClose();
+              reset();
+              refetchBudgets();
+              pushToast("success", "Tạo ngân sách thành công");
+              setIsSaving(false);
+            },
+            onError: (err) => {
+              console.error("Create budget error:", err);
+              pushToast("error", "Tạo ngân sách thất bại");
+              setIsSaving(false);
+            },
+          }
+        );
+      }
     } catch (error) {
       console.error("Error saving budget:", error);
     }
@@ -158,17 +169,19 @@ export default function BudgetsPage() {
   const handleEdit = (budget: any) => {
     setEditingBudget(budget);
     reset({
-      name: budget.name,
-      amount: budget.amount,
-      period: budget.period,
-      startDate: format(new Date(budget.startDate), "yyyy-MM-dd"),
-      endDate: budget.endDate
-        ? format(new Date(budget.endDate), "yyyy-MM-dd")
+      name: budget.category?.name || "",
+      amount: budget.amount_limit,
+      period: budget.period_type,
+      startDate: budget.start_date
+        ? format(new Date(budget.start_date), "yyyy-MM-dd")
+        : format(new Date(), "yyyy-MM-dd"),
+      endDate: budget.end_date
+        ? format(new Date(budget.end_date), "yyyy-MM-dd")
         : "",
-      categoryId: budget.categoryId,
-      alertEnabled: budget.alertEnabled,
-      alertAt: budget.alertAt,
-      isRecurring: budget.isRecurring,
+      categoryId: String(budget.category_id),
+      alertEnabled: budget.is_near_limit,
+      alertAt: Math.round(budget.usage_percentage || 0),
+      isRecurring: true,
     });
     onOpen();
   };
@@ -176,16 +189,15 @@ export default function BudgetsPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc muốn xóa ngân sách này?")) return;
 
-    try {
-      const response = await fetch(`/api/budgets/${id}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        fetchBudgets();
+    deleteBudget(
+      { budgetId: Number(id) },
+      {
+        onSuccess: () => {
+          refetchBudgets();
+        },
+        onError: (err) => console.error("Delete budget error:", err),
       }
-    } catch (error) {
-      console.error("Error deleting budget:", error);
-    }
+    );
   };
 
   const handleAddNew = () => {
@@ -230,6 +242,19 @@ export default function BudgetsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Toast container */}
+      <div className="fixed right-4 top-4 z-50 flex flex-col gap-3">
+        {toasts.map((t) => (
+          <div
+            key={t.id}
+            className={`max-w-sm px-4 py-2 rounded shadow-lg text-white ${
+              t.type === "success" ? "bg-green-600" : "bg-red-600"
+            }`}
+          >
+            {t.message}
+          </div>
+        ))}
+      </div>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -276,7 +301,7 @@ export default function BudgetsPage() {
         <div className="flex justify-center py-8">
           <Spinner size="lg" />
         </div>
-      ) : budgets.length === 0 ? (
+      ) : displayBudgets.length === 0 ? (
         <Card className="border-gray-200 dark:border-gray-700">
           <CardBody className="text-center py-12">
             <p className="text-lg text-gray-400">Chưa có ngân sách nào</p>
@@ -290,14 +315,16 @@ export default function BudgetsPage() {
         </Card>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {budgets.map((budget) => (
+          {displayBudgets.map((budget: any) => (
             <Card
               key={budget.id}
               className={budget.shouldAlert ? "border-2 border-warning" : ""}
             >
               <CardHeader className="flex justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold">{budget.name}</h3>
+                  <h3 className="text-lg font-semibold">
+                    {budget.category?.name || `Ngân sách ${budget.id}`}
+                  </h3>
                   <div className="flex items-center gap-2 mt-1">
                     <Chip size="sm" variant="flat">
                       {budget.category?.icon} {budget.category?.name}
@@ -307,11 +334,11 @@ export default function BudgetsPage() {
                       variant="flat"
                       className="bg-sky-100 text-sky-700"
                     >
-                      {getPeriodLabel(budget.period)}
+                      {getPeriodLabel(budget.period_type)}
                     </Chip>
                   </div>
                 </div>
-                {budget.shouldAlert && (
+                {budget.is_near_limit && (
                   <Chip color="warning" size="sm">
                     ⚠️
                   </Chip>
@@ -324,15 +351,15 @@ export default function BudgetsPage() {
                     <div className="flex justify-between text-sm mb-2">
                       <span className="text-default-500">Đã chi</span>
                       <span className="font-semibold">
-                        {formatCurrency(budget.spent)} /{" "}
-                        {formatCurrency(budget.amount)}
+                        {formatCurrency(budget.used_amount || 0)} /{" "}
+                        {formatCurrency(budget.amount_limit || 0)}
                       </span>
                     </div>
                     <Progress
-                      value={Math.min(budget.progress, 100)}
+                      value={Math.min(budget.usage_percentage || 0, 100)}
                       color={getProgressColor(
-                        budget.progress,
-                        budget.isOverBudget
+                        budget.usage_percentage || 0,
+                        budget.is_exceeded
                       )}
                       size="lg"
                       showValueLabel
@@ -345,15 +372,16 @@ export default function BudgetsPage() {
                     <span
                       className={`font-semibold ${budget.remaining < 0 ? "text-danger" : "text-success"}`}
                     >
-                      {formatCurrency(budget.remaining)}
+                      {formatCurrency(budget.remaining_amount || 0)}
                     </span>
                   </div>
 
                   {/* Date Range */}
                   <div className="text-xs text-default-400">
-                    {format(new Date(budget.startDate), "dd/MM/yyyy")}
-                    {budget.endDate &&
-                      ` - ${format(new Date(budget.endDate), "dd/MM/yyyy")}`}
+                    {budget.start_date &&
+                      format(new Date(budget.start_date), "dd/MM/yyyy")}
+                    {budget.end_date &&
+                      ` - ${format(new Date(budget.end_date), "dd/MM/yyyy")}`}
                   </div>
 
                   {/* Actions */}
@@ -392,6 +420,8 @@ export default function BudgetsPage() {
             </ModalHeader>
             <ModalBody>
               <div className="space-y-4">
+                {/* Ensure RHF knows about categoryId when using controlled Select */}
+                <input type="hidden" {...register("categoryId")} />
                 <Input
                   label="Tên ngân sách"
                   {...register("name")}
@@ -410,44 +440,33 @@ export default function BudgetsPage() {
 
                 <Select
                   label="Chu kỳ"
-                  {...register("period")}
-                  selectedKeys={[watch("period")]}
+                  selectedKeys={watch("period") ? [watch("period")] : []}
                   onChange={(e) => setValue("period", e.target.value as any)}
                   isInvalid={!!errors.period}
                   errorMessage={errors.period?.message}
                 >
-                  <SelectItem key="DAILY" value="DAILY">
-                    Hàng ngày
-                  </SelectItem>
-                  <SelectItem key="WEEKLY" value="WEEKLY">
-                    Hàng tuần
-                  </SelectItem>
-                  <SelectItem key="MONTHLY" value="MONTHLY">
-                    Hàng tháng
-                  </SelectItem>
-                  <SelectItem key="QUARTERLY" value="QUARTERLY">
-                    Hàng quý
-                  </SelectItem>
-                  <SelectItem key="YEARLY" value="YEARLY">
-                    Hàng năm
-                  </SelectItem>
-                  <SelectItem key="CUSTOM" value="CUSTOM">
-                    Tùy chỉnh
-                  </SelectItem>
+                  <SelectItem key="WEEKLY">Hàng tuần</SelectItem>
+                  <SelectItem key="MONTHLY">Hàng tháng</SelectItem>
+                  <SelectItem key="CUSTOM">Tùy chỉnh</SelectItem>
                 </Select>
 
                 <Select
                   label="Danh mục"
-                  {...register("categoryId")}
                   selectedKeys={
                     watch("categoryId") ? [watch("categoryId")] : []
                   }
-                  onChange={(e) => setValue("categoryId", e.target.value)}
+                  onChange={(e) =>
+                    setValue("categoryId", e.target.value, {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    })
+                  }
+                  disabled={categoriesLoading}
                   isInvalid={!!errors.categoryId}
                   errorMessage={errors.categoryId?.message}
                 >
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
+                  {displayCategories.map((cat: any) => (
+                    <SelectItem key={String(cat.id)}>
                       {cat.icon} {cat.name}
                     </SelectItem>
                   ))}
@@ -504,6 +523,8 @@ export default function BudgetsPage() {
               <Button
                 type="submit"
                 className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
+                isLoading={isSaving}
+                disabled={isSaving}
               >
                 {editingBudget ? "Cập nhật" : "Tạo"}
               </Button>

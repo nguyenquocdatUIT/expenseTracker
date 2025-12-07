@@ -70,6 +70,7 @@ export default function TransactionsPage() {
   });
 
   const { data: categories } = useGetCategoriesApiV1CategoriesGet();
+  console.log("categories:", categories);
   const { data: wallets } = useGetWalletsApiV1WalletsGet();
 
   // Mutations
@@ -360,29 +361,39 @@ export default function TransactionsPage() {
 
                 <Select
                   label="Danh mục"
-                  {...register("category_id", { valueAsNumber: true })}
+                  selectedKeys={
+                    watch("category_id") ? [String(watch("category_id"))] : []
+                  }
+                  onChange={(e) => {
+                    setValue("category_id", Number(e.target.value), {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    });
+                  }}
                   isInvalid={!!errors.category_id}
                   errorMessage={errors.category_id?.message}
                 >
-                  {(categories || [])
-                    .filter((cat) =>
-                      transactionType === "TRANSFER"
-                        ? true
-                        : cat.type === transactionType
-                    )
-                    .map((cat) => (
-                      <SelectItem key={cat.id}>{cat.name}</SelectItem>
-                    ))}
+                  {(categories || []).map((cat) => (
+                    <SelectItem key={String(cat.id)}>{cat.name}</SelectItem>
+                  ))}
                 </Select>
 
                 <Select
                   label="Ví"
-                  {...register("wallet_id", { valueAsNumber: true })}
+                  selectedKeys={
+                    watch("wallet_id") ? [String(watch("wallet_id"))] : []
+                  }
+                  onChange={(e) => {
+                    setValue("wallet_id", Number(e.target.value), {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    });
+                  }}
                   isInvalid={!!errors.wallet_id}
                   errorMessage={errors.wallet_id?.message}
                 >
                   {(wallets || []).map((wallet) => (
-                    <SelectItem key={wallet.id}>
+                    <SelectItem key={String(wallet.id)}>
                       {wallet.name} - {formatCurrency(wallet.balance)}
                     </SelectItem>
                   ))}
@@ -391,12 +402,22 @@ export default function TransactionsPage() {
                 {transactionType === "TRANSFER" && (
                   <Select
                     label="Ví đích"
-                    {...register("to_wallet_id", { valueAsNumber: true })}
+                    selectedKeys={
+                      watch("to_wallet_id")
+                        ? [String(watch("to_wallet_id"))]
+                        : []
+                    }
+                    onChange={(e) => {
+                      setValue("to_wallet_id", Number(e.target.value), {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
+                    }}
                     isInvalid={!!errors.to_wallet_id}
                     errorMessage={errors.to_wallet_id?.message}
                   >
                     {(wallets || []).map((wallet) => (
-                      <SelectItem key={wallet.id}>
+                      <SelectItem key={String(wallet.id)}>
                         {wallet.name} - {formatCurrency(wallet.balance)}
                       </SelectItem>
                     ))}

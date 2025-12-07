@@ -28,6 +28,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
+import {
+  useGetRecurringTransactionsApiV1RecurringTransactionsGet,
+  useCreateRecurringTransactionApiV1RecurringTransactionsPost,
+  useUpdateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch,
+  useDeleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete,
+  useGetCategoriesApiV1CategoriesGet,
+  useGetWalletsApiV1WalletsGet,
+} from "@/lib/api";
 
 const recurringSchema = z.object({
   amount: z.number().positive("Số tiền phải lớn hơn 0"),
@@ -46,10 +54,12 @@ type RecurringFormData = z.infer<typeof recurringSchema>;
 
 export default function RecurringTransactionsPage() {
   const [recurring, setRecurring] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
-  const [wallets, setWallets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingRecurring, setEditingRecurring] = useState<any>(null);
+  const [toasts, setToasts] = useState<
+    { id: number; type: "success" | "error"; message: string }[]
+  >([]);
+  const [isSaving, setIsSaving] = useState(false);
   const [filter, setFilter] = useState<"all" | "active">("active");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -73,81 +83,99 @@ export default function RecurringTransactionsPage() {
 
   const transactionType = watch("type");
 
+  // Use generated API hooks
+  const {
+    data: recurringData,
+    isLoading: recurringLoading,
+    refetch: refetchRecurring,
+  } = useGetRecurringTransactionsApiV1RecurringTransactionsGet();
+
+  const { data: categoriesData, isLoading: categoriesLoading } =
+    useGetCategoriesApiV1CategoriesGet();
+
+  const { data: walletsData, isLoading: walletsLoading } =
+    useGetWalletsApiV1WalletsGet();
+
+  const { mutate: createRecurring } =
+    useCreateRecurringTransactionApiV1RecurringTransactionsPost();
+  const { mutate: updateRecurring } =
+    useUpdateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch();
+  const { mutate: deleteRecurring } =
+    useDeleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete();
+
   useEffect(() => {
-    fetchRecurring();
-    fetchCategories();
-    fetchWallets();
-  }, [filter]);
+    setLoading(recurringLoading || categoriesLoading || walletsLoading);
+  }, [recurringLoading, categoriesLoading, walletsLoading]);
 
-  const fetchRecurring = async () => {
-    try {
-      setLoading(true);
-      const url =
-        filter === "active"
-          ? "/api/recurring-transactions?active=true"
-          : "/api/recurring-transactions";
-      const response = await fetch(url);
-      if (response.ok) {
-        const data = await response.json();
-        setRecurring(data);
-      }
-    } catch (error) {
-      console.error("Error fetching recurring transactions:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const displayRecurring = recurringData || [];
+  const displayCategories = categoriesData || [];
+  const displayWallets = walletsData || [];
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch("/api/categories");
-      if (response.ok) {
-        const data = await response.json();
-        setCategories(data);
-      }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
-  const fetchWallets = async () => {
-    try {
-      const response = await fetch("/api/wallets");
-      if (response.ok) {
-        const data = await response.json();
-        setWallets(data);
-      }
-    } catch (error) {
-      console.error("Error fetching wallets:", error);
-    }
+  const pushToast = (type: "success" | "error", message: string) => {
+    const id = Date.now() + Math.floor(Math.random() * 1000);
+    setToasts((t) => [...t, { id, type, message }]);
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3500);
   };
 
   const onSubmit = async (data: RecurringFormData) => {
     try {
-      const url = editingRecurring
-        ? `/api/recurring-transactions/${editingRecurring.id}`
-        : "/api/recurring-transactions";
-      const method = editingRecurring ? "PUT" : "POST";
+      const payload = {
+        amount: Number(data.amount),
+        type: data.type as any,
+        description: data.description || undefined,
+        frequency: data.frequency as any,
+        start_date: new Date(data.startDate).toISOString(),
+        end_date: data.endDate
+          ? new Date(data.endDate).toISOString()
+          : undefined,
+        category_id: Number(data.categoryId),
+        wallet_id: Number(data.walletId),
+        notify_before: data.notifyBefore || undefined,
+        is_active: data.isActive,
+      };
 
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          amount: Number(data.amount),
-          startDate: new Date(data.startDate).toISOString(),
-          endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
-        }),
-      });
-
-      if (response.ok) {
-        onClose();
-        reset();
-        setEditingRecurring(null);
-        fetchRecurring();
+      setIsSaving(true);
+      if (editingRecurring && editingRecurring.id) {
+        updateRecurring(
+          { recurringId: Number(editingRecurring.id), data: payload },
+          {
+            onSuccess: () => {
+              onClose();
+              reset();
+              setEditingRecurring(null);
+              refetchRecurring();
+              pushToast("success", "Cập nhật giao dịch định kỳ thành công");
+              setIsSaving(false);
+            },
+            onError: (err) => {
+              console.error("Update recurring error:", err);
+              pushToast("error", "Cập nhật thất bại");
+              setIsSaving(false);
+            },
+          }
+        );
+      } else {
+        createRecurring(
+          { data: payload },
+          {
+            onSuccess: () => {
+              onClose();
+              reset();
+              refetchRecurring();
+              pushToast("success", "Tạo giao dịch định kỳ thành công");
+              setIsSaving(false);
+            },
+            onError: (err) => {
+              console.error("Create recurring error:", err);
+              pushToast("error", "Tạo thất bại");
+              setIsSaving(false);
+            },
+          }
+        );
       }
     } catch (error) {
       console.error("Error saving recurring transaction:", error);
+      setIsSaving(false);
     }
   };
 
@@ -158,12 +186,14 @@ export default function RecurringTransactionsPage() {
       type: item.type,
       description: item.description || "",
       frequency: item.frequency,
-      startDate: format(new Date(item.startDate), "yyyy-MM-dd"),
-      endDate: item.endDate ? format(new Date(item.endDate), "yyyy-MM-dd") : "",
-      categoryId: item.categoryId,
-      walletId: item.walletId,
-      notifyBefore: item.notifyBefore || 0,
-      isActive: item.isActive,
+      startDate: format(new Date(item.start_date), "yyyy-MM-dd"),
+      endDate: item.end_date
+        ? format(new Date(item.end_date), "yyyy-MM-dd")
+        : "",
+      categoryId: String(item.category_id),
+      walletId: String(item.wallet_id),
+      notifyBefore: item.notify_before || 0,
+      isActive: item.is_active,
     });
     onOpen();
   };
@@ -171,16 +201,19 @@ export default function RecurringTransactionsPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc muốn xóa giao dịch định kỳ này?")) return;
 
-    try {
-      const response = await fetch(`/api/recurring-transactions/${id}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        fetchRecurring();
+    deleteRecurring(
+      { recurringId: Number(id) },
+      {
+        onSuccess: () => {
+          refetchRecurring();
+          pushToast("success", "Xóa thành công");
+        },
+        onError: (err) => {
+          console.error("Delete recurring error:", err);
+          pushToast("error", "Xóa thất bại");
+        },
       }
-    } catch (error) {
-      console.error("Error deleting recurring transaction:", error);
-    }
+    );
   };
 
   const handleAddNew = () => {
@@ -237,9 +270,7 @@ export default function RecurringTransactionsPage() {
     }
   };
 
-  const filteredCategories = categories.filter((cat) =>
-    transactionType === "TRANSFER" ? true : cat.type === transactionType
-  );
+  const filteredCategories = displayCategories as any[];
 
   return (
     <div className="space-y-6">
@@ -285,7 +316,7 @@ export default function RecurringTransactionsPage() {
             <div className="flex justify-center py-8">
               <Spinner size="lg" />
             </div>
-          ) : recurring.length === 0 ? (
+          ) : displayRecurring.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-lg text-default-400">
                 Chưa có giao dịch định kỳ nào
@@ -306,7 +337,7 @@ export default function RecurringTransactionsPage() {
                 <TableColumn>THAO TÁC</TableColumn>
               </TableHeader>
               <TableBody>
-                {recurring.map((item) => (
+                {displayRecurring.map((item: any) => (
                   <TableRow key={item.id}>
                     <TableCell>
                       <Chip
@@ -339,15 +370,24 @@ export default function RecurringTransactionsPage() {
                       </Chip>
                     </TableCell>
                     <TableCell>
-                      {format(new Date(item.nextDate), "dd/MM/yyyy")}
+                      {(() => {
+                        const nd = item.next_date ?? item.nextDate;
+                        return nd ? format(new Date(nd), "dd/MM/yyyy") : "-";
+                      })()}
                     </TableCell>
                     <TableCell>
                       <Chip
                         size="sm"
-                        color={item.isActive ? "success" : "default"}
+                        color={
+                          (item.is_active ?? item.isActive)
+                            ? "success"
+                            : "default"
+                        }
                         variant="flat"
                       >
-                        {item.isActive ? "Hoạt động" : "Tạm dừng"}
+                        {(item.is_active ?? item.isActive)
+                          ? "Hoạt động"
+                          : "Tạm dừng"}
                       </Chip>
                     </TableCell>
                     <TableCell>
@@ -389,23 +429,25 @@ export default function RecurringTransactionsPage() {
             </ModalHeader>
             <ModalBody>
               <div className="space-y-4">
+                <input type="hidden" {...register("categoryId")} />
+                <input type="hidden" {...register("walletId")} />
+                <input type="hidden" {...register("type")} />
+                <input type="hidden" {...register("frequency")} />
                 <Select
                   label="Loại giao dịch"
-                  {...register("type")}
-                  selectedKeys={[watch("type")]}
-                  onChange={(e) => setValue("type", e.target.value as any)}
+                  selectedKeys={watch("type") ? [String(watch("type"))] : []}
+                  onChange={(e) =>
+                    setValue("type", String(e.target.value) as any, {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    })
+                  }
                   isInvalid={!!errors.type}
                   errorMessage={errors.type?.message}
                 >
-                  <SelectItem key="INCOME" value="INCOME">
-                    Thu nhập
-                  </SelectItem>
-                  <SelectItem key="EXPENSE" value="EXPENSE">
-                    Chi tiêu
-                  </SelectItem>
-                  <SelectItem key="TRANSFER" value="TRANSFER">
-                    Chuyển khoản
-                  </SelectItem>
+                  <SelectItem key="INCOME">Thu nhập</SelectItem>
+                  <SelectItem key="EXPENSE">Chi tiêu</SelectItem>
+                  <SelectItem key="TRANSFER">Chuyển khoản</SelectItem>
                 </Select>
 
                 <Input
@@ -418,38 +460,40 @@ export default function RecurringTransactionsPage() {
 
                 <Select
                   label="Tần suất"
-                  {...register("frequency")}
-                  selectedKeys={[watch("frequency")]}
-                  onChange={(e) => setValue("frequency", e.target.value as any)}
+                  selectedKeys={
+                    watch("frequency") ? [String(watch("frequency"))] : []
+                  }
+                  onChange={(e) =>
+                    setValue("frequency", String(e.target.value) as any, {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    })
+                  }
                   isInvalid={!!errors.frequency}
                   errorMessage={errors.frequency?.message}
                 >
-                  <SelectItem key="DAILY" value="DAILY">
-                    Hàng ngày
-                  </SelectItem>
-                  <SelectItem key="WEEKLY" value="WEEKLY">
-                    Hàng tuần
-                  </SelectItem>
-                  <SelectItem key="MONTHLY" value="MONTHLY">
-                    Hàng tháng
-                  </SelectItem>
-                  <SelectItem key="YEARLY" value="YEARLY">
-                    Hàng năm
-                  </SelectItem>
+                  <SelectItem key="DAILY">Hàng ngày</SelectItem>
+                  <SelectItem key="WEEKLY">Hàng tuần</SelectItem>
+                  <SelectItem key="MONTHLY">Hàng tháng</SelectItem>
+                  <SelectItem key="YEARLY">Hàng năm</SelectItem>
                 </Select>
 
                 <Select
                   label="Danh mục"
-                  {...register("categoryId")}
                   selectedKeys={
-                    watch("categoryId") ? [watch("categoryId")] : []
+                    watch("categoryId") ? [String(watch("categoryId"))] : []
                   }
-                  onChange={(e) => setValue("categoryId", e.target.value)}
+                  onChange={(e) =>
+                    setValue("categoryId", String(e.target.value), {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    })
+                  }
                   isInvalid={!!errors.categoryId}
                   errorMessage={errors.categoryId?.message}
                 >
-                  {filteredCategories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
+                  {filteredCategories.map((cat: any) => (
+                    <SelectItem key={String(cat.id)}>
                       {cat.icon} {cat.name}
                     </SelectItem>
                   ))}
@@ -457,14 +501,20 @@ export default function RecurringTransactionsPage() {
 
                 <Select
                   label="Ví"
-                  {...register("walletId")}
-                  selectedKeys={watch("walletId") ? [watch("walletId")] : []}
-                  onChange={(e) => setValue("walletId", e.target.value)}
+                  selectedKeys={
+                    watch("walletId") ? [String(watch("walletId"))] : []
+                  }
+                  onChange={(e) =>
+                    setValue("walletId", String(e.target.value), {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    })
+                  }
                   isInvalid={!!errors.walletId}
                   errorMessage={errors.walletId?.message}
                 >
-                  {wallets.map((wallet) => (
-                    <SelectItem key={wallet.id} value={wallet.id}>
+                  {displayWallets.map((wallet: any) => (
+                    <SelectItem key={String(wallet.id)}>
                       {wallet.name}
                     </SelectItem>
                   ))}

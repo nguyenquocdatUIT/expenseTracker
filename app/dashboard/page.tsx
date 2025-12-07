@@ -19,6 +19,22 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  startOfYear,
+  endOfYear,
+  subMonths,
+  startOfDay,
+  endOfDay,
+} from "date-fns";
+import {
+  useGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet,
+  useGetSpendingTrendApiV1AnalyticsSpendingTrendGet,
+  useGetTopCategoriesApiV1AnalyticsTopCategoriesGet,
+  useGetWalletsApiV1WalletsGet,
+} from "@/lib/api";
 
 interface AnalyticsData {
   summary: {
@@ -62,86 +78,120 @@ const COLORS = [
 export default function DashboardPage() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [period, setPeriod] = useState("month");
+  const [period, setPeriod] = useState<"month" | "year">("month");
+
+  // compute date range for API calls based on `period`
+  const getDateRange = () => {
+    const now = new Date();
+    if (period === "month") {
+      return {
+        date_from: format(
+          startOfDay(startOfMonth(now)),
+          "yyyy-MM-dd'T'HH:mm:ss"
+        ),
+        date_to: format(endOfDay(endOfMonth(now)), "yyyy-MM-dd'T'HH:mm:ss"),
+      };
+    }
+    return {
+      date_from: format(startOfDay(startOfYear(now)), "yyyy-MM-dd'T'HH:mm:ss"),
+      date_to: format(endOfDay(endOfYear(now)), "yyyy-MM-dd'T'HH:mm:ss"),
+    };
+  };
+
+  // Hooks for analytics
+  const { date_from, date_to } = getDateRange();
+
+  const { data: spendingByCategory } =
+    useGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet({
+      date_from,
+      date_to,
+    });
+
+  console.log("spendingByCategory:", spendingByCategory);
+  const trendFrom = format(
+    startOfDay(subMonths(new Date(), 5)),
+    "yyyy-MM-dd'T'HH:mm:ss"
+  );
+  const trendTo = format(endOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss");
+  const { data: spendingTrend } =
+    useGetSpendingTrendApiV1AnalyticsSpendingTrendGet({
+      date_from: trendFrom,
+      date_to: trendTo,
+      group_by: "month",
+    });
+  const { data: topCategories } =
+    useGetTopCategoriesApiV1AnalyticsTopCategoriesGet({
+      date_from,
+      date_to,
+      limit: 5,
+    });
+  const { data: wallets } = useGetWalletsApiV1WalletsGet();
 
   useEffect(() => {
-    fetchAnalytics();
-  }, [period]);
-
-  const fetchAnalytics = async () => {
-    try {
-      setLoading(true);
-
-      // TODO: Kết nối API thật sau
-      // const response = await fetch(`/api/analytics?period=${period}`);
-      // const data = await response.json();
-
-      // Dummy data tạm thời
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      const data: AnalyticsData = {
-        summary: {
-          income: 50000000,
-          expense: 35000000,
-          balance: 15000000,
-          totalBalance: 75000000,
-        },
-        expensesByCategory: [
-          { category: "Ăn uống", amount: 12000000, icon: "🍕", color: "#EB5757" },
-          { category: "Di chuyển", amount: 8000000, icon: "🚗", color: "#27AE60" },
-          { category: "Mua sắm", amount: 7000000, icon: "🛍️", color: "#F2994A" },
-          { category: "Giải trí", amount: 5000000, icon: "🎮", color: "#9B51E0" },
-          { category: "Khác", amount: 3000000, icon: "📦", color: "#2D9CDB" },
-        ],
-        topCategories: [
-          { category: "Ăn uống", amount: 12000000, count: 45 },
-          { category: "Di chuyển", amount: 8000000, count: 30 },
-          { category: "Mua sắm", amount: 7000000, count: 15 },
-        ],
-        monthlyTrend: [
-          {
-            month: "T7",
-            income: 45000000,
-            expense: 30000000,
-            balance: 15000000,
-          },
-          {
-            month: "T8",
-            income: 48000000,
-            expense: 32000000,
-            balance: 16000000,
-          },
-          {
-            month: "T9",
-            income: 47000000,
-            expense: 31000000,
-            balance: 16000000,
-          },
-          {
-            month: "T10",
-            income: 49000000,
-            expense: 33000000,
-            balance: 16000000,
-          },
-          {
-            month: "T11",
-            income: 50000000,
-            expense: 35000000,
-            balance: 15000000,
-          },
-        ],
-        wallets: [
-          { name: "Ví tiền mặt", type: "CASH", balance: 5000000 },
-          { name: "Ngân hàng", type: "BANK_ACCOUNT", balance: 70000000 },
-        ],
+    setLoading(
+      !spendingByCategory || !spendingTrend || !topCategories || !wallets
+    );
+    if (spendingByCategory && spendingTrend && topCategories && wallets) {
+      // Map API responses to AnalyticsData
+      const summary = {
+        // The API doesn't provide income summary directly here; estimate expense from spendingTrend sums and set income to 0 for now.
+        income: 0,
+        expense: (spendingByCategory || []).reduce(
+          (s: number, c: any) => s + (c.amount || 0),
+          0
+        ),
+        balance: (wallets || []).reduce(
+          (s: number, w: any) => s + (w.balance || 0),
+          0
+        ),
+        totalBalance: (wallets || []).reduce(
+          (s: number, w: any) => s + (w.balance || 0),
+          0
+        ),
       };
 
-      setAnalytics(data);
-    } catch (error) {
-      console.error("Error fetching analytics:", error);
-    } finally {
-      setLoading(false);
+      const expensesByCategory = (spendingByCategory || []).map((c: any) => ({
+        category: c.category_name || c.category || c.name,
+        amount: Number(c.total_amount ?? c.amount ?? 0),
+        color: c.color,
+        icon: c.icon,
+      })) as AnalyticsData["expensesByCategory"];
+
+      const topCats = (topCategories || []).map((t: any) => ({
+        category: t.category,
+        amount: t.amount,
+        count: t.count,
+      }));
+
+      const monthlyTrend = (spendingTrend || []).map((t: any) => ({
+        month: t.label || t.month || t.date,
+        income: t.income || 0,
+        expense: t.expense || t.amount || 0,
+        balance: (t.income || 0) - (t.expense || t.amount || 0),
+      }));
+
+      const mappedWallets = (wallets || []).map((w: any) => ({
+        name: w.name,
+        type: w.currency || "UNKNOWN",
+        balance: w.balance,
+      }));
+
+      const totalBalance = mappedWallets.reduce(
+        (s: number, w: any) => s + (w.balance || 0),
+        0
+      );
+      summary.balance = totalBalance;
+      summary.totalBalance = totalBalance;
+
+      setAnalytics({
+        summary,
+        expensesByCategory,
+        topCategories: topCats,
+        monthlyTrend,
+        wallets: mappedWallets,
+      });
     }
-  };
+  }, [spendingByCategory, spendingTrend, topCategories, wallets, period]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("vi-VN", {

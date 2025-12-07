@@ -71,6 +71,7 @@ export default function CategoriesPage() {
   });
 
   const onSubmit = async (data: CategoryFormData) => {
+    console.log("Submitting category:", data);
     createCategory(
       { data },
       {
@@ -216,11 +217,14 @@ export default function CategoriesPage() {
 
                 <Select
                   label="Loại"
-                  {...register("type")}
-                  selectedKeys={[watch("type")]}
-                  onChange={(e) =>
-                    setValue("type", e.target.value as CategoryType)
-                  }
+                  selectedKeys={watch("type") ? [watch("type")] : []}
+                  onChange={(e) => {
+                    console.log("Selected type:", e.target.value);
+                    setValue("type", e.target.value as CategoryType, {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    });
+                  }}
                   isInvalid={!!errors.type}
                   errorMessage={errors.type?.message}
                 >

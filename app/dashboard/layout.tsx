@@ -18,7 +18,7 @@ const navigation = [
   { name: "Giao dịch", href: "/dashboard/transactions", icon: "💳" },
   { name: "Ngân sách", href: "/dashboard/budgets", icon: "💰" },
   { name: "Giao dịch định kỳ", href: "/dashboard/recurring", icon: "🔄" },
-  { name: "Phân tích", href: "/dashboard/analytics", icon: "📈" },
+  // { name: "Phân tích", href: "/dashboard/analytics", icon: "📈" },
   { name: "Ví", href: "/dashboard/wallets", icon: "👛" },
   { name: "Danh mục", href: "/dashboard/categories", icon: "📁" },
 ];
