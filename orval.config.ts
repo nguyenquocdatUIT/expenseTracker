@@ -1,4 +1,4 @@
-import { defineConfig } from "orval";
+import { defineConfig } from "orval/dist";
 
 export default defineConfig({
   api: {

@@ -40,7 +40,7 @@ export default function ProfilePage() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<ProfileFormData>({
+  } = useForm({
     resolver: zodResolver(profileSchema),
   });
 
@@ -143,15 +143,9 @@ export default function ProfilePage() {
               {...register("currency")}
               defaultSelectedKeys={["VND"]}
             >
-              <SelectItem key="VND" value="VND">
-                VND - Việt Nam Đồng
-              </SelectItem>
-              <SelectItem key="USD" value="USD">
-                USD - Đô la Mỹ
-              </SelectItem>
-              <SelectItem key="EUR" value="EUR">
-                EUR - Euro
-              </SelectItem>
+              <SelectItem key="VND">VND - Việt Nam Đồng</SelectItem>
+              <SelectItem key="USD">USD - Đô la Mỹ</SelectItem>
+              <SelectItem key="EUR">EUR - Euro</SelectItem>
             </Select>
 
             {message && (

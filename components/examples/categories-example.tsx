@@ -14,7 +14,11 @@ export default function CategoriesExample() {
   }
 
   if (error) {
-    return <div>Error loading categories: {error.message}</div>;
+    const errorMessage =
+      typeof error === "object" && error && "message" in (error as any)
+        ? String((error as any).message)
+        : String(error);
+    return <div>Error loading categories: {errorMessage}</div>;
   }
 
   return (
