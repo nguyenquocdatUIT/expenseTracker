@@ -27,8 +27,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
-  useGetCategoriesApiV1CategoriesGet,
-  useCreateCategoryApiV1CategoriesPost,
+  useGetCategoriesV1CategoriesGet,
+  useCreateCategoryV1CategoriesPost,
   type CategoryType,
 } from "@/lib/api";
 
@@ -50,11 +50,11 @@ export default function CategoriesPage() {
     data: categories,
     isLoading,
     refetch,
-  } = useGetCategoriesApiV1CategoriesGet();
+  } = useGetCategoriesV1CategoriesGet();
 
   // Create category mutation
   const { mutate: createCategory, isPending: isCreating } =
-    useCreateCategoryApiV1CategoriesPost();
+    useCreateCategoryV1CategoriesPost();
 
   const {
     register,

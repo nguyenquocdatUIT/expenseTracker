@@ -4,7 +4,7 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { TransactionResponse } from './transactionResponse';
+import type { TransactionResponse } from "./transactionResponse";
 
 /**
  * Monthly transaction group.

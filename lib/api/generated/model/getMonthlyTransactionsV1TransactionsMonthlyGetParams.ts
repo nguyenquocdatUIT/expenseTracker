@@ -5,7 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetWeeklyTransactionsApiV1TransactionsWeeklyGetParams = {
-date_from?: string | null;
-date_to?: string | null;
+export type GetMonthlyTransactionsV1TransactionsMonthlyGetParams = {
+  date_from?: string | null;
+  date_to?: string | null;
 };

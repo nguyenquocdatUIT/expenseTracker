@@ -18,10 +18,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
-  useGetWalletsApiV1WalletsGet,
-  useCreateWalletApiV1WalletsPost,
-  useUpdateWalletApiV1WalletsWalletIdPatch,
-  useDeleteWalletApiV1WalletsWalletIdDelete,
+  useGetWalletsV1WalletsGet,
+  useCreateWalletV1WalletsPost,
+  useUpdateWalletV1WalletsWalletIdPatch,
+  useDeleteWalletV1WalletsWalletIdDelete,
 } from "@/lib/api";
 
 const walletSchema = z.object({
@@ -37,18 +37,18 @@ export default function WalletsPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // Fetch wallets
-  const { data: wallets, isLoading, refetch } = useGetWalletsApiV1WalletsGet();
+  const { data: wallets, isLoading, refetch } = useGetWalletsV1WalletsGet();
 
   // Create wallet mutation
   const { mutate: createWallet, isPending: isCreating } =
-    useCreateWalletApiV1WalletsPost();
+    useCreateWalletV1WalletsPost();
 
   // Update wallet mutation
   const { mutate: updateWallet, isPending: isUpdating } =
-    useUpdateWalletApiV1WalletsWalletIdPatch();
+    useUpdateWalletV1WalletsWalletIdPatch();
 
   // Delete wallet mutation
-  const { mutate: deleteWallet } = useDeleteWalletApiV1WalletsWalletIdDelete();
+  const { mutate: deleteWallet } = useDeleteWalletV1WalletsWalletIdDelete();
 
   const {
     register,

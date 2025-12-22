@@ -4,10 +4,7 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -20,462 +17,949 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
+  UseQueryResult,
+} from "@tanstack/react-query";
 
 import type {
   HTTPValidationError,
   RecurringTransactionCreateRequest,
   RecurringTransactionResponse,
-  RecurringTransactionUpdateRequest
-} from '.././model';
+  RecurringTransactionUpdateRequest,
+} from ".././model";
 
-import { customInstance } from '../../client';
-
+import { customInstance } from "../../client";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
 
 /**
  * Get all recurring transactions.
  * @summary Get Recurring Transactions
  */
-export const getRecurringTransactionsApiV1RecurringTransactionsGet = (
-    
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const getRecurringTransactionsV1RecurringTransactionsGet = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<RecurringTransactionResponse[]>(
-      {url: `/api/v1/recurring-transactions`, method: 'GET', signal
-    },
-      options);
-    }
-  
+  return customInstance<RecurringTransactionResponse[]>(
+    { url: `/v1/recurring-transactions`, method: "GET", signal },
+    options,
+  );
+};
 
+export const getGetRecurringTransactionsV1RecurringTransactionsGetQueryKey =
+  () => {
+    return [`/v1/recurring-transactions`] as const;
+  };
 
+export const getGetRecurringTransactionsV1RecurringTransactionsGetQueryOptions =
+  <
+    TData = Awaited<
+      ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+    >,
+    TError = unknown,
+  >(options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  }) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
 
-export const getGetRecurringTransactionsApiV1RecurringTransactionsGetQueryKey = () => {
-    return [
-    `/api/v1/recurring-transactions`
-    ] as const;
-    }
+    const queryKey =
+      queryOptions?.queryKey ??
+      getGetRecurringTransactionsV1RecurringTransactionsGetQueryKey();
 
-    
-export const getGetRecurringTransactionsApiV1RecurringTransactionsGetQueryOptions = <TData = Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
+    const queryFn: QueryFunction<
+      Awaited<
+        ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+      >
+    > = ({ signal }) =>
+      getRecurringTransactionsV1RecurringTransactionsGet(
+        requestOptions,
+        signal,
+      );
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+    return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+      Awaited<
+        ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+      >,
+      TError,
+      TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+  };
 
-  const queryKey =  queryOptions?.queryKey ?? getGetRecurringTransactionsApiV1RecurringTransactionsGetQueryKey();
+export type GetRecurringTransactionsV1RecurringTransactionsGetQueryResult =
+  NonNullable<
+    Awaited<
+      ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+    >
+  >;
+export type GetRecurringTransactionsV1RecurringTransactionsGetQueryError =
+  unknown;
 
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>> = ({ signal }) => getRecurringTransactionsApiV1RecurringTransactionsGet(requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetRecurringTransactionsApiV1RecurringTransactionsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>>
-export type GetRecurringTransactionsApiV1RecurringTransactionsGetQueryError = unknown
-
-
-export function useGetRecurringTransactionsApiV1RecurringTransactionsGet<TData = Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>, TError, TData>> & Pick<
+export function useGetRecurringTransactionsV1RecurringTransactionsGet<
+  TData = Awaited<
+    ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+  >,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>,
+          Awaited<
+            ReturnType<
+              typeof getRecurringTransactionsV1RecurringTransactionsGet
+            >
+          >,
           TError,
-          Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetRecurringTransactionsApiV1RecurringTransactionsGet<TData = Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>, TError, TData>> & Pick<
+          Awaited<
+            ReturnType<
+              typeof getRecurringTransactionsV1RecurringTransactionsGet
+            >
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetRecurringTransactionsV1RecurringTransactionsGet<
+  TData = Awaited<
+    ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+  >,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>,
+          Awaited<
+            ReturnType<
+              typeof getRecurringTransactionsV1RecurringTransactionsGet
+            >
+          >,
           TError,
-          Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetRecurringTransactionsApiV1RecurringTransactionsGet<TData = Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<
+            ReturnType<
+              typeof getRecurringTransactionsV1RecurringTransactionsGet
+            >
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetRecurringTransactionsV1RecurringTransactionsGet<
+  TData = Awaited<
+    ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+  >,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get Recurring Transactions
  */
 
-export function useGetRecurringTransactionsApiV1RecurringTransactionsGet<TData = Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionsApiV1RecurringTransactionsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetRecurringTransactionsV1RecurringTransactionsGet<
+  TData = Awaited<
+    ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+  >,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof getRecurringTransactionsV1RecurringTransactionsGet>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions =
+    getGetRecurringTransactionsV1RecurringTransactionsGetQueryOptions(options);
 
-  const queryOptions = getGetRecurringTransactionsApiV1RecurringTransactionsGetQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Create a new recurring transaction.
  * @summary Create Recurring Transaction
  */
-export const createRecurringTransactionApiV1RecurringTransactionsPost = (
-    recurringTransactionCreateRequest: RecurringTransactionCreateRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const createRecurringTransactionV1RecurringTransactionsPost = (
+  recurringTransactionCreateRequest: RecurringTransactionCreateRequest,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<RecurringTransactionResponse>(
-      {url: `/api/v1/recurring-transactions`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: recurringTransactionCreateRequest, signal
+  return customInstance<RecurringTransactionResponse>(
+    {
+      url: `/v1/recurring-transactions`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: recurringTransactionCreateRequest,
+      signal,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getCreateRecurringTransactionV1RecurringTransactionsPostMutationOptions =
+  <TError = HTTPValidationError, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+      Awaited<
+        ReturnType<typeof createRecurringTransactionV1RecurringTransactionsPost>
+      >,
+      TError,
+      { data: RecurringTransactionCreateRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  }): UseMutationOptions<
+    Awaited<
+      ReturnType<typeof createRecurringTransactionV1RecurringTransactionsPost>
+    >,
+    TError,
+    { data: RecurringTransactionCreateRequest },
+    TContext
+  > => {
+    const mutationKey = [
+      "createRecurringTransactionV1RecurringTransactionsPost",
+    ];
+    const { mutation: mutationOptions, request: requestOptions } = options
+      ? options.mutation &&
+        "mutationKey" in options.mutation &&
+        options.mutation.mutationKey
+        ? options
+        : { ...options, mutation: { ...options.mutation, mutationKey } }
+      : { mutation: { mutationKey }, request: undefined };
 
-export const getCreateRecurringTransactionApiV1RecurringTransactionsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRecurringTransactionApiV1RecurringTransactionsPost>>, TError,{data: RecurringTransactionCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof createRecurringTransactionApiV1RecurringTransactionsPost>>, TError,{data: RecurringTransactionCreateRequest}, TContext> => {
+    const mutationFn: MutationFunction<
+      Awaited<
+        ReturnType<typeof createRecurringTransactionV1RecurringTransactionsPost>
+      >,
+      { data: RecurringTransactionCreateRequest }
+    > = (props) => {
+      const { data } = props ?? {};
 
-const mutationKey = ['createRecurringTransactionApiV1RecurringTransactionsPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+      return createRecurringTransactionV1RecurringTransactionsPost(
+        data,
+        requestOptions,
+      );
+    };
 
-      
+    return { mutationFn, ...mutationOptions };
+  };
 
+export type CreateRecurringTransactionV1RecurringTransactionsPostMutationResult =
+  NonNullable<
+    Awaited<
+      ReturnType<typeof createRecurringTransactionV1RecurringTransactionsPost>
+    >
+  >;
+export type CreateRecurringTransactionV1RecurringTransactionsPostMutationBody =
+  RecurringTransactionCreateRequest;
+export type CreateRecurringTransactionV1RecurringTransactionsPostMutationError =
+  HTTPValidationError;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createRecurringTransactionApiV1RecurringTransactionsPost>>, {data: RecurringTransactionCreateRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  createRecurringTransactionApiV1RecurringTransactionsPost(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateRecurringTransactionApiV1RecurringTransactionsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createRecurringTransactionApiV1RecurringTransactionsPost>>>
-    export type CreateRecurringTransactionApiV1RecurringTransactionsPostMutationBody = RecurringTransactionCreateRequest
-    export type CreateRecurringTransactionApiV1RecurringTransactionsPostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Create Recurring Transaction
  */
-export const useCreateRecurringTransactionApiV1RecurringTransactionsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createRecurringTransactionApiV1RecurringTransactionsPost>>, TError,{data: RecurringTransactionCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createRecurringTransactionApiV1RecurringTransactionsPost>>,
-        TError,
-        {data: RecurringTransactionCreateRequest},
-        TContext
-      > => {
+export const useCreateRecurringTransactionV1RecurringTransactionsPost = <
+  TError = HTTPValidationError,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<
+        ReturnType<typeof createRecurringTransactionV1RecurringTransactionsPost>
+      >,
+      TError,
+      { data: RecurringTransactionCreateRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<
+    ReturnType<typeof createRecurringTransactionV1RecurringTransactionsPost>
+  >,
+  TError,
+  { data: RecurringTransactionCreateRequest },
+  TContext
+> => {
+  const mutationOptions =
+    getCreateRecurringTransactionV1RecurringTransactionsPostMutationOptions(
+      options,
+    );
 
-      const mutationOptions = getCreateRecurringTransactionApiV1RecurringTransactionsPostMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * Get recurring transaction by ID.
  * @summary Get Recurring Transaction
  */
-export const getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet = (
+export const getRecurringTransactionV1RecurringTransactionsRecurringIdGet = (
+  recurringId: number,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<RecurringTransactionResponse>(
+    { url: `/v1/recurring-transactions/${recurringId}`, method: "GET", signal },
+    options,
+  );
+};
+
+export const getGetRecurringTransactionV1RecurringTransactionsRecurringIdGetQueryKey =
+  (recurringId?: number) => {
+    return [`/v1/recurring-transactions/${recurringId}`] as const;
+  };
+
+export const getGetRecurringTransactionV1RecurringTransactionsRecurringIdGetQueryOptions =
+  <
+    TData = Awaited<
+      ReturnType<
+        typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+      >
+    >,
+    TError = HTTPValidationError,
+  >(
     recurringId: number,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<RecurringTransactionResponse>(
-      {url: `/api/v1/recurring-transactions/${recurringId}`, method: 'GET', signal
+    options?: {
+      query?: Partial<
+        UseQueryOptions<
+          Awaited<
+            ReturnType<
+              typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+            >
+          >,
+          TError,
+          TData
+        >
+      >;
+      request?: SecondParameter<typeof customInstance>;
     },
-      options);
-    }
-  
+  ) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
 
+    const queryKey =
+      queryOptions?.queryKey ??
+      getGetRecurringTransactionV1RecurringTransactionsRecurringIdGetQueryKey(
+        recurringId,
+      );
 
+    const queryFn: QueryFunction<
+      Awaited<
+        ReturnType<
+          typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+        >
+      >
+    > = ({ signal }) =>
+      getRecurringTransactionV1RecurringTransactionsRecurringIdGet(
+        recurringId,
+        requestOptions,
+        signal,
+      );
 
-export const getGetRecurringTransactionApiV1RecurringTransactionsRecurringIdGetQueryKey = (recurringId?: number,) => {
-    return [
-    `/api/v1/recurring-transactions/${recurringId}`
-    ] as const;
-    }
+    return {
+      queryKey,
+      queryFn,
+      enabled: !!recurringId,
+      ...queryOptions,
+    } as UseQueryOptions<
+      Awaited<
+        ReturnType<
+          typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+        >
+      >,
+      TError,
+      TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+  };
 
-    
-export const getGetRecurringTransactionApiV1RecurringTransactionsRecurringIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>, TError = HTTPValidationError>(recurringId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
+export type GetRecurringTransactionV1RecurringTransactionsRecurringIdGetQueryResult =
+  NonNullable<
+    Awaited<
+      ReturnType<
+        typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+      >
+    >
+  >;
+export type GetRecurringTransactionV1RecurringTransactionsRecurringIdGetQueryError =
+  HTTPValidationError;
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetRecurringTransactionApiV1RecurringTransactionsRecurringIdGetQueryKey(recurringId);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>> = ({ signal }) => getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet(recurringId, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(recurringId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetRecurringTransactionApiV1RecurringTransactionsRecurringIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>>
-export type GetRecurringTransactionApiV1RecurringTransactionsRecurringIdGetQueryError = HTTPValidationError
-
-
-export function useGetRecurringTransactionApiV1RecurringTransactionsRecurringIdGet<TData = Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>, TError = HTTPValidationError>(
- recurringId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>, TError, TData>> & Pick<
+export function useGetRecurringTransactionV1RecurringTransactionsRecurringIdGet<
+  TData = Awaited<
+    ReturnType<
+      typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+    >
+  >,
+  TError = HTTPValidationError,
+>(
+  recurringId: number,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<
+            typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+          >
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>,
+          Awaited<
+            ReturnType<
+              typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+            >
+          >,
           TError,
-          Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetRecurringTransactionApiV1RecurringTransactionsRecurringIdGet<TData = Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>, TError = HTTPValidationError>(
- recurringId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>, TError, TData>> & Pick<
+          Awaited<
+            ReturnType<
+              typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+            >
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetRecurringTransactionV1RecurringTransactionsRecurringIdGet<
+  TData = Awaited<
+    ReturnType<
+      typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+    >
+  >,
+  TError = HTTPValidationError,
+>(
+  recurringId: number,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<
+            typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+          >
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>,
+          Awaited<
+            ReturnType<
+              typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+            >
+          >,
           TError,
-          Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetRecurringTransactionApiV1RecurringTransactionsRecurringIdGet<TData = Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>, TError = HTTPValidationError>(
- recurringId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<
+            ReturnType<
+              typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+            >
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetRecurringTransactionV1RecurringTransactionsRecurringIdGet<
+  TData = Awaited<
+    ReturnType<
+      typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+    >
+  >,
+  TError = HTTPValidationError,
+>(
+  recurringId: number,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<
+            typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+          >
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get Recurring Transaction
  */
 
-export function useGetRecurringTransactionApiV1RecurringTransactionsRecurringIdGet<TData = Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>, TError = HTTPValidationError>(
- recurringId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecurringTransactionApiV1RecurringTransactionsRecurringIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetRecurringTransactionV1RecurringTransactionsRecurringIdGet<
+  TData = Awaited<
+    ReturnType<
+      typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+    >
+  >,
+  TError = HTTPValidationError,
+>(
+  recurringId: number,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<
+            typeof getRecurringTransactionV1RecurringTransactionsRecurringIdGet
+          >
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions =
+    getGetRecurringTransactionV1RecurringTransactionsRecurringIdGetQueryOptions(
+      recurringId,
+      options,
+    );
 
-  const queryOptions = getGetRecurringTransactionApiV1RecurringTransactionsRecurringIdGetQueryOptions(recurringId,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Update recurring transaction.
  * @summary Update Recurring Transaction
  */
-export const updateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch = (
+export const updateRecurringTransactionV1RecurringTransactionsRecurringIdPatch =
+  (
     recurringId: number,
     recurringTransactionUpdateRequest: RecurringTransactionUpdateRequest,
- options?: SecondParameter<typeof customInstance>,) => {
-      
-      
-      return customInstance<RecurringTransactionResponse>(
-      {url: `/api/v1/recurring-transactions/${recurringId}`, method: 'PATCH',
-      headers: {'Content-Type': 'application/json', },
-      data: recurringTransactionUpdateRequest
-    },
-      options);
-    }
-  
+    options?: SecondParameter<typeof customInstance>,
+  ) => {
+    return customInstance<RecurringTransactionResponse>(
+      {
+        url: `/v1/recurring-transactions/${recurringId}`,
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        data: recurringTransactionUpdateRequest,
+      },
+      options,
+    );
+  };
 
+export const getUpdateRecurringTransactionV1RecurringTransactionsRecurringIdPatchMutationOptions =
+  <TError = HTTPValidationError, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+      Awaited<
+        ReturnType<
+          typeof updateRecurringTransactionV1RecurringTransactionsRecurringIdPatch
+        >
+      >,
+      TError,
+      { recurringId: number; data: RecurringTransactionUpdateRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  }): UseMutationOptions<
+    Awaited<
+      ReturnType<
+        typeof updateRecurringTransactionV1RecurringTransactionsRecurringIdPatch
+      >
+    >,
+    TError,
+    { recurringId: number; data: RecurringTransactionUpdateRequest },
+    TContext
+  > => {
+    const mutationKey = [
+      "updateRecurringTransactionV1RecurringTransactionsRecurringIdPatch",
+    ];
+    const { mutation: mutationOptions, request: requestOptions } = options
+      ? options.mutation &&
+        "mutationKey" in options.mutation &&
+        options.mutation.mutationKey
+        ? options
+        : { ...options, mutation: { ...options.mutation, mutationKey } }
+      : { mutation: { mutationKey }, request: undefined };
 
-export const getUpdateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch>>, TError,{recurringId: number;data: RecurringTransactionUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof updateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch>>, TError,{recurringId: number;data: RecurringTransactionUpdateRequest}, TContext> => {
+    const mutationFn: MutationFunction<
+      Awaited<
+        ReturnType<
+          typeof updateRecurringTransactionV1RecurringTransactionsRecurringIdPatch
+        >
+      >,
+      { recurringId: number; data: RecurringTransactionUpdateRequest }
+    > = (props) => {
+      const { recurringId, data } = props ?? {};
 
-const mutationKey = ['updateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+      return updateRecurringTransactionV1RecurringTransactionsRecurringIdPatch(
+        recurringId,
+        data,
+        requestOptions,
+      );
+    };
 
-      
+    return { mutationFn, ...mutationOptions };
+  };
 
+export type UpdateRecurringTransactionV1RecurringTransactionsRecurringIdPatchMutationResult =
+  NonNullable<
+    Awaited<
+      ReturnType<
+        typeof updateRecurringTransactionV1RecurringTransactionsRecurringIdPatch
+      >
+    >
+  >;
+export type UpdateRecurringTransactionV1RecurringTransactionsRecurringIdPatchMutationBody =
+  RecurringTransactionUpdateRequest;
+export type UpdateRecurringTransactionV1RecurringTransactionsRecurringIdPatchMutationError =
+  HTTPValidationError;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch>>, {recurringId: number;data: RecurringTransactionUpdateRequest}> = (props) => {
-          const {recurringId,data} = props ?? {};
-
-          return  updateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch(recurringId,data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type UpdateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch>>>
-    export type UpdateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatchMutationBody = RecurringTransactionUpdateRequest
-    export type UpdateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatchMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Update Recurring Transaction
  */
-export const useUpdateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch>>, TError,{recurringId: number;data: RecurringTransactionUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof updateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch>>,
+export const useUpdateRecurringTransactionV1RecurringTransactionsRecurringIdPatch =
+  <TError = HTTPValidationError, TContext = unknown>(
+    options?: {
+      mutation?: UseMutationOptions<
+        Awaited<
+          ReturnType<
+            typeof updateRecurringTransactionV1RecurringTransactionsRecurringIdPatch
+          >
+        >,
         TError,
-        {recurringId: number;data: RecurringTransactionUpdateRequest},
+        { recurringId: number; data: RecurringTransactionUpdateRequest },
         TContext
-      > => {
+      >;
+      request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+  ): UseMutationResult<
+    Awaited<
+      ReturnType<
+        typeof updateRecurringTransactionV1RecurringTransactionsRecurringIdPatch
+      >
+    >,
+    TError,
+    { recurringId: number; data: RecurringTransactionUpdateRequest },
+    TContext
+  > => {
+    const mutationOptions =
+      getUpdateRecurringTransactionV1RecurringTransactionsRecurringIdPatchMutationOptions(
+        options,
+      );
 
-      const mutationOptions = getUpdateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatchMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+    return useMutation(mutationOptions, queryClient);
+  };
+/**
  * Delete recurring transaction.
  * @summary Delete Recurring Transaction
  */
-export const deleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete = (
-    recurringId: number,
- options?: SecondParameter<typeof customInstance>,) => {
-      
-      
-      return customInstance<void>(
-      {url: `/api/v1/recurring-transactions/${recurringId}`, method: 'DELETE'
-    },
-      options);
-    }
-  
+export const deleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete =
+  (recurringId: number, options?: SecondParameter<typeof customInstance>) => {
+    return customInstance<void>(
+      { url: `/v1/recurring-transactions/${recurringId}`, method: "DELETE" },
+      options,
+    );
+  };
 
+export const getDeleteRecurringTransactionV1RecurringTransactionsRecurringIdDeleteMutationOptions =
+  <TError = HTTPValidationError, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+      Awaited<
+        ReturnType<
+          typeof deleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete
+        >
+      >,
+      TError,
+      { recurringId: number },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  }): UseMutationOptions<
+    Awaited<
+      ReturnType<
+        typeof deleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete
+      >
+    >,
+    TError,
+    { recurringId: number },
+    TContext
+  > => {
+    const mutationKey = [
+      "deleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete",
+    ];
+    const { mutation: mutationOptions, request: requestOptions } = options
+      ? options.mutation &&
+        "mutationKey" in options.mutation &&
+        options.mutation.mutationKey
+        ? options
+        : { ...options, mutation: { ...options.mutation, mutationKey } }
+      : { mutation: { mutationKey }, request: undefined };
 
-export const getDeleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDeleteMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete>>, TError,{recurringId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete>>, TError,{recurringId: number}, TContext> => {
+    const mutationFn: MutationFunction<
+      Awaited<
+        ReturnType<
+          typeof deleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete
+        >
+      >,
+      { recurringId: number }
+    > = (props) => {
+      const { recurringId } = props ?? {};
 
-const mutationKey = ['deleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+      return deleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete(
+        recurringId,
+        requestOptions,
+      );
+    };
 
-      
+    return { mutationFn, ...mutationOptions };
+  };
 
+export type DeleteRecurringTransactionV1RecurringTransactionsRecurringIdDeleteMutationResult =
+  NonNullable<
+    Awaited<
+      ReturnType<
+        typeof deleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete
+      >
+    >
+  >;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete>>, {recurringId: number}> = (props) => {
-          const {recurringId} = props ?? {};
+export type DeleteRecurringTransactionV1RecurringTransactionsRecurringIdDeleteMutationError =
+  HTTPValidationError;
 
-          return  deleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete(recurringId,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete>>>
-    
-    export type DeleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDeleteMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Delete Recurring Transaction
  */
-export const useDeleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete>>, TError,{recurringId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof deleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete>>,
+export const useDeleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete =
+  <TError = HTTPValidationError, TContext = unknown>(
+    options?: {
+      mutation?: UseMutationOptions<
+        Awaited<
+          ReturnType<
+            typeof deleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete
+          >
+        >,
         TError,
-        {recurringId: number},
+        { recurringId: number },
         TContext
-      > => {
+      >;
+      request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+  ): UseMutationResult<
+    Awaited<
+      ReturnType<
+        typeof deleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete
+      >
+    >,
+    TError,
+    { recurringId: number },
+    TContext
+  > => {
+    const mutationOptions =
+      getDeleteRecurringTransactionV1RecurringTransactionsRecurringIdDeleteMutationOptions(
+        options,
+      );
 
-      const mutationOptions = getDeleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDeleteMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+    return useMutation(mutationOptions, queryClient);
+  };
+/**
  * Manually execute a recurring transaction.
  * @summary Execute Recurring Transaction
  */
-export const executeRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePost = (
+export const executeRecurringTransactionV1RecurringTransactionsRecurringIdExecutePost =
+  (
     recurringId: number,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<unknown>(
-      {url: `/api/v1/recurring-transactions/${recurringId}/execute`, method: 'POST', signal
-    },
-      options);
-    }
-  
+    options?: SecondParameter<typeof customInstance>,
+    signal?: AbortSignal,
+  ) => {
+    return customInstance<unknown>(
+      {
+        url: `/v1/recurring-transactions/${recurringId}/execute`,
+        method: "POST",
+        signal,
+      },
+      options,
+    );
+  };
 
+export const getExecuteRecurringTransactionV1RecurringTransactionsRecurringIdExecutePostMutationOptions =
+  <TError = HTTPValidationError, TContext = unknown>(options?: {
+    mutation?: UseMutationOptions<
+      Awaited<
+        ReturnType<
+          typeof executeRecurringTransactionV1RecurringTransactionsRecurringIdExecutePost
+        >
+      >,
+      TError,
+      { recurringId: number },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  }): UseMutationOptions<
+    Awaited<
+      ReturnType<
+        typeof executeRecurringTransactionV1RecurringTransactionsRecurringIdExecutePost
+      >
+    >,
+    TError,
+    { recurringId: number },
+    TContext
+  > => {
+    const mutationKey = [
+      "executeRecurringTransactionV1RecurringTransactionsRecurringIdExecutePost",
+    ];
+    const { mutation: mutationOptions, request: requestOptions } = options
+      ? options.mutation &&
+        "mutationKey" in options.mutation &&
+        options.mutation.mutationKey
+        ? options
+        : { ...options, mutation: { ...options.mutation, mutationKey } }
+      : { mutation: { mutationKey }, request: undefined };
 
-export const getExecuteRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof executeRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePost>>, TError,{recurringId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof executeRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePost>>, TError,{recurringId: number}, TContext> => {
+    const mutationFn: MutationFunction<
+      Awaited<
+        ReturnType<
+          typeof executeRecurringTransactionV1RecurringTransactionsRecurringIdExecutePost
+        >
+      >,
+      { recurringId: number }
+    > = (props) => {
+      const { recurringId } = props ?? {};
 
-const mutationKey = ['executeRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+      return executeRecurringTransactionV1RecurringTransactionsRecurringIdExecutePost(
+        recurringId,
+        requestOptions,
+      );
+    };
 
-      
+    return { mutationFn, ...mutationOptions };
+  };
 
+export type ExecuteRecurringTransactionV1RecurringTransactionsRecurringIdExecutePostMutationResult =
+  NonNullable<
+    Awaited<
+      ReturnType<
+        typeof executeRecurringTransactionV1RecurringTransactionsRecurringIdExecutePost
+      >
+    >
+  >;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof executeRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePost>>, {recurringId: number}> = (props) => {
-          const {recurringId} = props ?? {};
+export type ExecuteRecurringTransactionV1RecurringTransactionsRecurringIdExecutePostMutationError =
+  HTTPValidationError;
 
-          return  executeRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePost(recurringId,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type ExecuteRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePostMutationResult = NonNullable<Awaited<ReturnType<typeof executeRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePost>>>
-    
-    export type ExecuteRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Execute Recurring Transaction
  */
-export const useExecuteRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof executeRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePost>>, TError,{recurringId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof executeRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePost>>,
+export const useExecuteRecurringTransactionV1RecurringTransactionsRecurringIdExecutePost =
+  <TError = HTTPValidationError, TContext = unknown>(
+    options?: {
+      mutation?: UseMutationOptions<
+        Awaited<
+          ReturnType<
+            typeof executeRecurringTransactionV1RecurringTransactionsRecurringIdExecutePost
+          >
+        >,
         TError,
-        {recurringId: number},
+        { recurringId: number },
         TContext
-      > => {
+      >;
+      request?: SecondParameter<typeof customInstance>;
+    },
+    queryClient?: QueryClient,
+  ): UseMutationResult<
+    Awaited<
+      ReturnType<
+        typeof executeRecurringTransactionV1RecurringTransactionsRecurringIdExecutePost
+      >
+    >,
+    TError,
+    { recurringId: number },
+    TContext
+  > => {
+    const mutationOptions =
+      getExecuteRecurringTransactionV1RecurringTransactionsRecurringIdExecutePostMutationOptions(
+        options,
+      );
 
-      const mutationOptions = getExecuteRecurringTransactionApiV1RecurringTransactionsRecurringIdExecutePostMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
+    return useMutation(mutationOptions, queryClient);
+  };

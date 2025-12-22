@@ -4,11 +4,11 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { TransactionType } from './transactionType';
-import type { TransactionCreateRequestCategoryId } from './transactionCreateRequestCategoryId';
-import type { TransactionCreateRequestWalletId } from './transactionCreateRequestWalletId';
-import type { TransactionCreateRequestToWalletId } from './transactionCreateRequestToWalletId';
-import type { TransactionCreateRequestDescription } from './transactionCreateRequestDescription';
+import type { TransactionType } from "./transactionType";
+import type { TransactionCreateRequestCategoryId } from "./transactionCreateRequestCategoryId";
+import type { TransactionCreateRequestWalletId } from "./transactionCreateRequestWalletId";
+import type { TransactionCreateRequestToWalletId } from "./transactionCreateRequestToWalletId";
+import type { TransactionCreateRequestDescription } from "./transactionCreateRequestDescription";
 
 /**
  * Transaction creation request.

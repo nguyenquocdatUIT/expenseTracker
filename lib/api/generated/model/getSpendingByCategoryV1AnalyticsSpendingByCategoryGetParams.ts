@@ -5,7 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type ExportTransactionsPdfApiV1ReportsTransactionsPdfGetParams = {
-date_from?: string | null;
-date_to?: string | null;
+export type GetSpendingByCategoryV1AnalyticsSpendingByCategoryGetParams = {
+  date_from: string;
+  date_to: string;
 };

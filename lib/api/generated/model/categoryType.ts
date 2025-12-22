@@ -8,11 +8,10 @@
 /**
  * Category type.
  */
-export type CategoryType = typeof CategoryType[keyof typeof CategoryType];
-
+export type CategoryType = (typeof CategoryType)[keyof typeof CategoryType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CategoryType = {
-  EXPENSE: 'EXPENSE',
-  INCOME: 'INCOME',
+  EXPENSE: "EXPENSE",
+  INCOME: "INCOME",
 } as const;

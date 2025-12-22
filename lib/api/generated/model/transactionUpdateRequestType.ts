@@ -4,6 +4,6 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { TransactionType } from './transactionType';
+import type { TransactionType } from "./transactionType";
 
 export type TransactionUpdateRequestType = TransactionType | null;

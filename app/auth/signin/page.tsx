@@ -8,7 +8,7 @@ import { Link } from "@heroui/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useLoginApiV1AuthLoginPost } from "@/lib/api";
+import { useLoginV1AuthLoginPost } from "@/lib/api";
 import { useState } from "react";
 
 const signinSchema = z.object({
@@ -22,7 +22,7 @@ export default function SigninPage() {
   const router = useRouter();
   const [error, setError] = useState("");
 
-  const { mutate: login, isPending } = useLoginApiV1AuthLoginPost();
+  const { mutate: login, isPending } = useLoginV1AuthLoginPost();
 
   const {
     register,

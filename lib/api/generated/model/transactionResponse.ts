@@ -4,14 +4,14 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { TransactionResponseCategoryId } from './transactionResponseCategoryId';
-import type { TransactionResponseCategory } from './transactionResponseCategory';
-import type { TransactionResponseWalletId } from './transactionResponseWalletId';
-import type { TransactionResponseWallet } from './transactionResponseWallet';
-import type { TransactionResponseToWalletId } from './transactionResponseToWalletId';
-import type { TransactionResponseToWallet } from './transactionResponseToWallet';
-import type { TransactionResponseDescription } from './transactionResponseDescription';
-import type { TransactionResponseUpdatedAt } from './transactionResponseUpdatedAt';
+import type { TransactionResponseCategoryId } from "./transactionResponseCategoryId";
+import type { TransactionResponseCategory } from "./transactionResponseCategory";
+import type { TransactionResponseWalletId } from "./transactionResponseWalletId";
+import type { TransactionResponseWallet } from "./transactionResponseWallet";
+import type { TransactionResponseToWalletId } from "./transactionResponseToWalletId";
+import type { TransactionResponseToWallet } from "./transactionResponseToWallet";
+import type { TransactionResponseDescription } from "./transactionResponseDescription";
+import type { TransactionResponseUpdatedAt } from "./transactionResponseUpdatedAt";
 
 /**
  * Transaction response.

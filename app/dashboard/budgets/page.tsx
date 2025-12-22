@@ -22,11 +22,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format, addMonths } from "date-fns";
 import {
-  useGetBudgetsApiV1BudgetsGet,
-  useCreateBudgetApiV1BudgetsPost,
-  useUpdateBudgetApiV1BudgetsBudgetIdPatch,
-  useDeleteBudgetApiV1BudgetsBudgetIdDelete,
-  useGetCategoriesApiV1CategoriesGet,
+  useGetBudgetsV1BudgetsGet,
+  useCreateBudgetV1BudgetsPost,
+  useUpdateBudgetV1BudgetsBudgetIdPatch,
+  useDeleteBudgetV1BudgetsBudgetIdDelete,
+  useGetCategoriesV1CategoriesGet,
 } from "@/lib/api";
 
 const budgetSchema = z.object({
@@ -80,17 +80,17 @@ export default function BudgetsPage() {
     data: budgetsData,
     isLoading: budgetsLoading,
     refetch: refetchBudgets,
-  } = useGetBudgetsApiV1BudgetsGet();
+  } = useGetBudgetsV1BudgetsGet();
 
   const { data: categoriesData, isLoading: categoriesLoading } =
-    useGetCategoriesApiV1CategoriesGet();
+    useGetCategoriesV1CategoriesGet();
 
   const { mutate: createBudget, isPending: isCreating } =
-    useCreateBudgetApiV1BudgetsPost();
+    useCreateBudgetV1BudgetsPost();
 
-  const { mutate: updateBudget } = useUpdateBudgetApiV1BudgetsBudgetIdPatch();
+  const { mutate: updateBudget } = useUpdateBudgetV1BudgetsBudgetIdPatch();
 
-  const { mutate: deleteBudget } = useDeleteBudgetApiV1BudgetsBudgetIdDelete();
+  const { mutate: deleteBudget } = useDeleteBudgetV1BudgetsBudgetIdDelete();
 
   useEffect(() => {
     setLoading(budgetsLoading || categoriesLoading);

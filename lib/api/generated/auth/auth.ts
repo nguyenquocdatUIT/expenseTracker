@@ -4,10 +4,7 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -20,8 +17,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
+  UseQueryResult,
+} from "@tanstack/react-query";
 
 import type {
   HTTPValidationError,
@@ -31,615 +28,953 @@ import type {
   UserResponse,
   WalletCreateRequest,
   WalletResponse,
-  WalletUpdateRequest
-} from '.././model';
+  WalletUpdateRequest,
+} from ".././model";
 
-import { customInstance } from '../../client';
-
+import { customInstance } from "../../client";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
 
 /**
  * Register a new user.
  * @summary Register
  */
-export const registerApiV1AuthRegisterPost = (
-    userRegisterRequest: UserRegisterRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const registerV1AuthRegisterPost = (
+  userRegisterRequest: UserRegisterRequest,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<UserResponse>(
-      {url: `/api/v1/auth/register`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: userRegisterRequest, signal
+  return customInstance<UserResponse>(
+    {
+      url: `/v1/auth/register`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: userRegisterRequest,
+      signal,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getRegisterV1AuthRegisterPostMutationOptions = <
+  TError = HTTPValidationError,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof registerV1AuthRegisterPost>>,
+    TError,
+    { data: UserRegisterRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof registerV1AuthRegisterPost>>,
+  TError,
+  { data: UserRegisterRequest },
+  TContext
+> => {
+  const mutationKey = ["registerV1AuthRegisterPost"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getRegisterApiV1AuthRegisterPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registerApiV1AuthRegisterPost>>, TError,{data: UserRegisterRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof registerApiV1AuthRegisterPost>>, TError,{data: UserRegisterRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof registerV1AuthRegisterPost>>,
+    { data: UserRegisterRequest }
+  > = (props) => {
+    const { data } = props ?? {};
 
-const mutationKey = ['registerApiV1AuthRegisterPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return registerV1AuthRegisterPost(data, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type RegisterV1AuthRegisterPostMutationResult = NonNullable<
+  Awaited<ReturnType<typeof registerV1AuthRegisterPost>>
+>;
+export type RegisterV1AuthRegisterPostMutationBody = UserRegisterRequest;
+export type RegisterV1AuthRegisterPostMutationError = HTTPValidationError;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof registerApiV1AuthRegisterPost>>, {data: UserRegisterRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  registerApiV1AuthRegisterPost(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type RegisterApiV1AuthRegisterPostMutationResult = NonNullable<Awaited<ReturnType<typeof registerApiV1AuthRegisterPost>>>
-    export type RegisterApiV1AuthRegisterPostMutationBody = UserRegisterRequest
-    export type RegisterApiV1AuthRegisterPostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Register
  */
-export const useRegisterApiV1AuthRegisterPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof registerApiV1AuthRegisterPost>>, TError,{data: UserRegisterRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof registerApiV1AuthRegisterPost>>,
-        TError,
-        {data: UserRegisterRequest},
-        TContext
-      > => {
+export const useRegisterV1AuthRegisterPost = <
+  TError = HTTPValidationError,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof registerV1AuthRegisterPost>>,
+      TError,
+      { data: UserRegisterRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof registerV1AuthRegisterPost>>,
+  TError,
+  { data: UserRegisterRequest },
+  TContext
+> => {
+  const mutationOptions = getRegisterV1AuthRegisterPostMutationOptions(options);
 
-      const mutationOptions = getRegisterApiV1AuthRegisterPostMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * Login user and return access token.
  * @summary Login
  */
-export const loginApiV1AuthLoginPost = (
-    userLoginRequest: UserLoginRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const loginV1AuthLoginPost = (
+  userLoginRequest: UserLoginRequest,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<TokenResponse>(
-      {url: `/api/v1/auth/login`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: userLoginRequest, signal
+  return customInstance<TokenResponse>(
+    {
+      url: `/v1/auth/login`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: userLoginRequest,
+      signal,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getLoginV1AuthLoginPostMutationOptions = <
+  TError = HTTPValidationError,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof loginV1AuthLoginPost>>,
+    TError,
+    { data: UserLoginRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof loginV1AuthLoginPost>>,
+  TError,
+  { data: UserLoginRequest },
+  TContext
+> => {
+  const mutationKey = ["loginV1AuthLoginPost"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getLoginApiV1AuthLoginPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof loginApiV1AuthLoginPost>>, TError,{data: UserLoginRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof loginApiV1AuthLoginPost>>, TError,{data: UserLoginRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof loginV1AuthLoginPost>>,
+    { data: UserLoginRequest }
+  > = (props) => {
+    const { data } = props ?? {};
 
-const mutationKey = ['loginApiV1AuthLoginPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return loginV1AuthLoginPost(data, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type LoginV1AuthLoginPostMutationResult = NonNullable<
+  Awaited<ReturnType<typeof loginV1AuthLoginPost>>
+>;
+export type LoginV1AuthLoginPostMutationBody = UserLoginRequest;
+export type LoginV1AuthLoginPostMutationError = HTTPValidationError;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof loginApiV1AuthLoginPost>>, {data: UserLoginRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  loginApiV1AuthLoginPost(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type LoginApiV1AuthLoginPostMutationResult = NonNullable<Awaited<ReturnType<typeof loginApiV1AuthLoginPost>>>
-    export type LoginApiV1AuthLoginPostMutationBody = UserLoginRequest
-    export type LoginApiV1AuthLoginPostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Login
  */
-export const useLoginApiV1AuthLoginPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof loginApiV1AuthLoginPost>>, TError,{data: UserLoginRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof loginApiV1AuthLoginPost>>,
-        TError,
-        {data: UserLoginRequest},
-        TContext
-      > => {
+export const useLoginV1AuthLoginPost = <
+  TError = HTTPValidationError,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof loginV1AuthLoginPost>>,
+      TError,
+      { data: UserLoginRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof loginV1AuthLoginPost>>,
+  TError,
+  { data: UserLoginRequest },
+  TContext
+> => {
+  const mutationOptions = getLoginV1AuthLoginPostMutationOptions(options);
 
-      const mutationOptions = getLoginApiV1AuthLoginPostMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * Get current user information.
  * @summary Get Current User Info
  */
-export const getCurrentUserInfoApiV1AuthMeGet = (
-    
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const getCurrentUserInfoV1AuthMeGet = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<UserResponse>(
-      {url: `/api/v1/auth/me`, method: 'GET', signal
-    },
-      options);
-    }
-  
+  return customInstance<UserResponse>(
+    { url: `/v1/auth/me`, method: "GET", signal },
+    options,
+  );
+};
 
+export const getGetCurrentUserInfoV1AuthMeGetQueryKey = () => {
+  return [`/v1/auth/me`] as const;
+};
 
+export const getGetCurrentUserInfoV1AuthMeGetQueryOptions = <
+  TData = Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-export const getGetCurrentUserInfoApiV1AuthMeGetQueryKey = () => {
-    return [
-    `/api/v1/auth/me`
-    ] as const;
-    }
+  const queryKey =
+    queryOptions?.queryKey ?? getGetCurrentUserInfoV1AuthMeGetQueryKey();
 
-    
-export const getGetCurrentUserInfoApiV1AuthMeGetQueryOptions = <TData = Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>
+  > = ({ signal }) => getCurrentUserInfoV1AuthMeGet(requestOptions, signal);
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetCurrentUserInfoApiV1AuthMeGetQueryKey();
+export type GetCurrentUserInfoV1AuthMeGetQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>
+>;
+export type GetCurrentUserInfoV1AuthMeGetQueryError = unknown;
 
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>> = ({ signal }) => getCurrentUserInfoApiV1AuthMeGet(requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetCurrentUserInfoApiV1AuthMeGetQueryResult = NonNullable<Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>>
-export type GetCurrentUserInfoApiV1AuthMeGetQueryError = unknown
-
-
-export function useGetCurrentUserInfoApiV1AuthMeGet<TData = Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>, TError, TData>> & Pick<
+export function useGetCurrentUserInfoV1AuthMeGet<
+  TData = Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>,
+          Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
           TError,
-          Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetCurrentUserInfoApiV1AuthMeGet<TData = Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>, TError, TData>> & Pick<
+          Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetCurrentUserInfoV1AuthMeGet<
+  TData = Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>,
+          Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
           TError,
-          Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetCurrentUserInfoApiV1AuthMeGet<TData = Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetCurrentUserInfoV1AuthMeGet<
+  TData = Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get Current User Info
  */
 
-export function useGetCurrentUserInfoApiV1AuthMeGet<TData = Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCurrentUserInfoApiV1AuthMeGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetCurrentUserInfoV1AuthMeGet<
+  TData = Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCurrentUserInfoV1AuthMeGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetCurrentUserInfoV1AuthMeGetQueryOptions(options);
 
-  const queryOptions = getGetCurrentUserInfoApiV1AuthMeGetQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get all wallets for current user.
  * @summary Get Wallets
  */
-export const getWalletsApiV1WalletsGet = (
-    
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const getWalletsV1WalletsGet = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<WalletResponse[]>(
-      {url: `/api/v1/wallets`, method: 'GET', signal
-    },
-      options);
-    }
-  
+  return customInstance<WalletResponse[]>(
+    { url: `/v1/wallets`, method: "GET", signal },
+    options,
+  );
+};
 
+export const getGetWalletsV1WalletsGetQueryKey = () => {
+  return [`/v1/wallets`] as const;
+};
 
+export const getGetWalletsV1WalletsGetQueryOptions = <
+  TData = Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-export const getGetWalletsApiV1WalletsGetQueryKey = () => {
-    return [
-    `/api/v1/wallets`
-    ] as const;
-    }
+  const queryKey =
+    queryOptions?.queryKey ?? getGetWalletsV1WalletsGetQueryKey();
 
-    
-export const getGetWalletsApiV1WalletsGetQueryOptions = <TData = Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getWalletsV1WalletsGet>>
+  > = ({ signal }) => getWalletsV1WalletsGet(requestOptions, signal);
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetWalletsApiV1WalletsGetQueryKey();
+export type GetWalletsV1WalletsGetQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getWalletsV1WalletsGet>>
+>;
+export type GetWalletsV1WalletsGetQueryError = unknown;
 
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>> = ({ signal }) => getWalletsApiV1WalletsGet(requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetWalletsApiV1WalletsGetQueryResult = NonNullable<Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>>
-export type GetWalletsApiV1WalletsGetQueryError = unknown
-
-
-export function useGetWalletsApiV1WalletsGet<TData = Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>, TError, TData>> & Pick<
+export function useGetWalletsV1WalletsGet<
+  TData = Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>,
+          Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
           TError,
-          Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetWalletsApiV1WalletsGet<TData = Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>, TError, TData>> & Pick<
+          Awaited<ReturnType<typeof getWalletsV1WalletsGet>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetWalletsV1WalletsGet<
+  TData = Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>,
+          Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
           TError,
-          Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetWalletsApiV1WalletsGet<TData = Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<ReturnType<typeof getWalletsV1WalletsGet>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetWalletsV1WalletsGet<
+  TData = Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get Wallets
  */
 
-export function useGetWalletsApiV1WalletsGet<TData = Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWalletsApiV1WalletsGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetWalletsV1WalletsGet<
+  TData = Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getWalletsV1WalletsGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetWalletsV1WalletsGetQueryOptions(options);
 
-  const queryOptions = getGetWalletsApiV1WalletsGetQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Create a new wallet.
  * @summary Create Wallet
  */
-export const createWalletApiV1WalletsPost = (
-    walletCreateRequest: WalletCreateRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const createWalletV1WalletsPost = (
+  walletCreateRequest: WalletCreateRequest,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<WalletResponse>(
-      {url: `/api/v1/wallets`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: walletCreateRequest, signal
+  return customInstance<WalletResponse>(
+    {
+      url: `/v1/wallets`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: walletCreateRequest,
+      signal,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getCreateWalletV1WalletsPostMutationOptions = <
+  TError = HTTPValidationError,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createWalletV1WalletsPost>>,
+    TError,
+    { data: WalletCreateRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createWalletV1WalletsPost>>,
+  TError,
+  { data: WalletCreateRequest },
+  TContext
+> => {
+  const mutationKey = ["createWalletV1WalletsPost"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getCreateWalletApiV1WalletsPostMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createWalletApiV1WalletsPost>>, TError,{data: WalletCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof createWalletApiV1WalletsPost>>, TError,{data: WalletCreateRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createWalletV1WalletsPost>>,
+    { data: WalletCreateRequest }
+  > = (props) => {
+    const { data } = props ?? {};
 
-const mutationKey = ['createWalletApiV1WalletsPost'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return createWalletV1WalletsPost(data, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type CreateWalletV1WalletsPostMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createWalletV1WalletsPost>>
+>;
+export type CreateWalletV1WalletsPostMutationBody = WalletCreateRequest;
+export type CreateWalletV1WalletsPostMutationError = HTTPValidationError;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createWalletApiV1WalletsPost>>, {data: WalletCreateRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  createWalletApiV1WalletsPost(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateWalletApiV1WalletsPostMutationResult = NonNullable<Awaited<ReturnType<typeof createWalletApiV1WalletsPost>>>
-    export type CreateWalletApiV1WalletsPostMutationBody = WalletCreateRequest
-    export type CreateWalletApiV1WalletsPostMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Create Wallet
  */
-export const useCreateWalletApiV1WalletsPost = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createWalletApiV1WalletsPost>>, TError,{data: WalletCreateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createWalletApiV1WalletsPost>>,
-        TError,
-        {data: WalletCreateRequest},
-        TContext
-      > => {
+export const useCreateWalletV1WalletsPost = <
+  TError = HTTPValidationError,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof createWalletV1WalletsPost>>,
+      TError,
+      { data: WalletCreateRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof createWalletV1WalletsPost>>,
+  TError,
+  { data: WalletCreateRequest },
+  TContext
+> => {
+  const mutationOptions = getCreateWalletV1WalletsPostMutationOptions(options);
 
-      const mutationOptions = getCreateWalletApiV1WalletsPostMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * Get wallet by ID.
  * @summary Get Wallet
  */
-export const getWalletApiV1WalletsWalletIdGet = (
-    walletId: number,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const getWalletV1WalletsWalletIdGet = (
+  walletId: number,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<WalletResponse>(
-      {url: `/api/v1/wallets/${walletId}`, method: 'GET', signal
-    },
-      options);
-    }
-  
+  return customInstance<WalletResponse>(
+    { url: `/v1/wallets/${walletId}`, method: "GET", signal },
+    options,
+  );
+};
 
+export const getGetWalletV1WalletsWalletIdGetQueryKey = (walletId?: number) => {
+  return [`/v1/wallets/${walletId}`] as const;
+};
 
-
-export const getGetWalletApiV1WalletsWalletIdGetQueryKey = (walletId?: number,) => {
-    return [
-    `/api/v1/wallets/${walletId}`
-    ] as const;
-    }
-
-    
-export const getGetWalletApiV1WalletsWalletIdGetQueryOptions = <TData = Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>, TError = HTTPValidationError>(walletId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetWalletV1WalletsWalletIdGetQueryOptions = <
+  TData = Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
+  TError = HTTPValidationError,
+>(
+  walletId: number,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey =
+    queryOptions?.queryKey ??
+    getGetWalletV1WalletsWalletIdGetQueryKey(walletId);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetWalletApiV1WalletsWalletIdGetQueryKey(walletId);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>
+  > = ({ signal }) =>
+    getWalletV1WalletsWalletIdGet(walletId, requestOptions, signal);
 
-  
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!walletId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>> = ({ signal }) => getWalletApiV1WalletsWalletIdGet(walletId, requestOptions, signal);
+export type GetWalletV1WalletsWalletIdGetQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>
+>;
+export type GetWalletV1WalletsWalletIdGetQueryError = HTTPValidationError;
 
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(walletId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetWalletApiV1WalletsWalletIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>>
-export type GetWalletApiV1WalletsWalletIdGetQueryError = HTTPValidationError
-
-
-export function useGetWalletApiV1WalletsWalletIdGet<TData = Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>, TError = HTTPValidationError>(
- walletId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>, TError, TData>> & Pick<
+export function useGetWalletV1WalletsWalletIdGet<
+  TData = Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
+  TError = HTTPValidationError,
+>(
+  walletId: number,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>,
+          Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
           TError,
-          Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetWalletApiV1WalletsWalletIdGet<TData = Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>, TError = HTTPValidationError>(
- walletId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>, TError, TData>> & Pick<
+          Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetWalletV1WalletsWalletIdGet<
+  TData = Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
+  TError = HTTPValidationError,
+>(
+  walletId: number,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>,
+          Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
           TError,
-          Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetWalletApiV1WalletsWalletIdGet<TData = Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>, TError = HTTPValidationError>(
- walletId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetWalletV1WalletsWalletIdGet<
+  TData = Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
+  TError = HTTPValidationError,
+>(
+  walletId: number,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get Wallet
  */
 
-export function useGetWalletApiV1WalletsWalletIdGet<TData = Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>, TError = HTTPValidationError>(
- walletId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWalletApiV1WalletsWalletIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetWalletV1WalletsWalletIdGet<
+  TData = Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
+  TError = HTTPValidationError,
+>(
+  walletId: number,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getWalletV1WalletsWalletIdGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetWalletV1WalletsWalletIdGetQueryOptions(
+    walletId,
+    options,
+  );
 
-  const queryOptions = getGetWalletApiV1WalletsWalletIdGetQueryOptions(walletId,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Update wallet.
  * @summary Update Wallet
  */
-export const updateWalletApiV1WalletsWalletIdPatch = (
-    walletId: number,
-    walletUpdateRequest: WalletUpdateRequest,
- options?: SecondParameter<typeof customInstance>,) => {
-      
-      
-      return customInstance<WalletResponse>(
-      {url: `/api/v1/wallets/${walletId}`, method: 'PATCH',
-      headers: {'Content-Type': 'application/json', },
-      data: walletUpdateRequest
+export const updateWalletV1WalletsWalletIdPatch = (
+  walletId: number,
+  walletUpdateRequest: WalletUpdateRequest,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<WalletResponse>(
+    {
+      url: `/v1/wallets/${walletId}`,
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      data: walletUpdateRequest,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
+export const getUpdateWalletV1WalletsWalletIdPatchMutationOptions = <
+  TError = HTTPValidationError,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateWalletV1WalletsWalletIdPatch>>,
+    TError,
+    { walletId: number; data: WalletUpdateRequest },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateWalletV1WalletsWalletIdPatch>>,
+  TError,
+  { walletId: number; data: WalletUpdateRequest },
+  TContext
+> => {
+  const mutationKey = ["updateWalletV1WalletsWalletIdPatch"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getUpdateWalletApiV1WalletsWalletIdPatchMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWalletApiV1WalletsWalletIdPatch>>, TError,{walletId: number;data: WalletUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof updateWalletApiV1WalletsWalletIdPatch>>, TError,{walletId: number;data: WalletUpdateRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateWalletV1WalletsWalletIdPatch>>,
+    { walletId: number; data: WalletUpdateRequest }
+  > = (props) => {
+    const { walletId, data } = props ?? {};
 
-const mutationKey = ['updateWalletApiV1WalletsWalletIdPatch'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return updateWalletV1WalletsWalletIdPatch(walletId, data, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type UpdateWalletV1WalletsWalletIdPatchMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateWalletV1WalletsWalletIdPatch>>
+>;
+export type UpdateWalletV1WalletsWalletIdPatchMutationBody =
+  WalletUpdateRequest;
+export type UpdateWalletV1WalletsWalletIdPatchMutationError =
+  HTTPValidationError;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateWalletApiV1WalletsWalletIdPatch>>, {walletId: number;data: WalletUpdateRequest}> = (props) => {
-          const {walletId,data} = props ?? {};
-
-          return  updateWalletApiV1WalletsWalletIdPatch(walletId,data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type UpdateWalletApiV1WalletsWalletIdPatchMutationResult = NonNullable<Awaited<ReturnType<typeof updateWalletApiV1WalletsWalletIdPatch>>>
-    export type UpdateWalletApiV1WalletsWalletIdPatchMutationBody = WalletUpdateRequest
-    export type UpdateWalletApiV1WalletsWalletIdPatchMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Update Wallet
  */
-export const useUpdateWalletApiV1WalletsWalletIdPatch = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWalletApiV1WalletsWalletIdPatch>>, TError,{walletId: number;data: WalletUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof updateWalletApiV1WalletsWalletIdPatch>>,
-        TError,
-        {walletId: number;data: WalletUpdateRequest},
-        TContext
-      > => {
+export const useUpdateWalletV1WalletsWalletIdPatch = <
+  TError = HTTPValidationError,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof updateWalletV1WalletsWalletIdPatch>>,
+      TError,
+      { walletId: number; data: WalletUpdateRequest },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof updateWalletV1WalletsWalletIdPatch>>,
+  TError,
+  { walletId: number; data: WalletUpdateRequest },
+  TContext
+> => {
+  const mutationOptions =
+    getUpdateWalletV1WalletsWalletIdPatchMutationOptions(options);
 
-      const mutationOptions = getUpdateWalletApiV1WalletsWalletIdPatchMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * Delete wallet.
  * @summary Delete Wallet
  */
-export const deleteWalletApiV1WalletsWalletIdDelete = (
-    walletId: number,
- options?: SecondParameter<typeof customInstance>,) => {
-      
-      
-      return customInstance<void>(
-      {url: `/api/v1/wallets/${walletId}`, method: 'DELETE'
-    },
-      options);
-    }
-  
+export const deleteWalletV1WalletsWalletIdDelete = (
+  walletId: number,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    { url: `/v1/wallets/${walletId}`, method: "DELETE" },
+    options,
+  );
+};
 
+export const getDeleteWalletV1WalletsWalletIdDeleteMutationOptions = <
+  TError = HTTPValidationError,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteWalletV1WalletsWalletIdDelete>>,
+    TError,
+    { walletId: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteWalletV1WalletsWalletIdDelete>>,
+  TError,
+  { walletId: number },
+  TContext
+> => {
+  const mutationKey = ["deleteWalletV1WalletsWalletIdDelete"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-export const getDeleteWalletApiV1WalletsWalletIdDeleteMutationOptions = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteWalletApiV1WalletsWalletIdDelete>>, TError,{walletId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof deleteWalletApiV1WalletsWalletIdDelete>>, TError,{walletId: number}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteWalletV1WalletsWalletIdDelete>>,
+    { walletId: number }
+  > = (props) => {
+    const { walletId } = props ?? {};
 
-const mutationKey = ['deleteWalletApiV1WalletsWalletIdDelete'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+    return deleteWalletV1WalletsWalletIdDelete(walletId, requestOptions);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type DeleteWalletV1WalletsWalletIdDeleteMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteWalletV1WalletsWalletIdDelete>>
+>;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteWalletApiV1WalletsWalletIdDelete>>, {walletId: number}> = (props) => {
-          const {walletId} = props ?? {};
+export type DeleteWalletV1WalletsWalletIdDeleteMutationError =
+  HTTPValidationError;
 
-          return  deleteWalletApiV1WalletsWalletIdDelete(walletId,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeleteWalletApiV1WalletsWalletIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof deleteWalletApiV1WalletsWalletIdDelete>>>
-    
-    export type DeleteWalletApiV1WalletsWalletIdDeleteMutationError = HTTPValidationError
-
-    /**
+/**
  * @summary Delete Wallet
  */
-export const useDeleteWalletApiV1WalletsWalletIdDelete = <TError = HTTPValidationError,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteWalletApiV1WalletsWalletIdDelete>>, TError,{walletId: number}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof deleteWalletApiV1WalletsWalletIdDelete>>,
-        TError,
-        {walletId: number},
-        TContext
-      > => {
+export const useDeleteWalletV1WalletsWalletIdDelete = <
+  TError = HTTPValidationError,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof deleteWalletV1WalletsWalletIdDelete>>,
+      TError,
+      { walletId: number },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof deleteWalletV1WalletsWalletIdDelete>>,
+  TError,
+  { walletId: number },
+  TContext
+> => {
+  const mutationOptions =
+    getDeleteWalletV1WalletsWalletIdDeleteMutationOptions(options);
 
-      const mutationOptions = getDeleteWalletApiV1WalletsWalletIdDeleteMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
+  return useMutation(mutationOptions, queryClient);
+};

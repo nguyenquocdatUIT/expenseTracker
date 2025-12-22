@@ -4,6 +4,6 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryResponse } from './categoryResponse';
+import type { CategoryResponse } from "./categoryResponse";
 
 export type BudgetResponseCategory = CategoryResponse | null;

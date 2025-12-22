@@ -28,11 +28,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
 import {
-  useGetTransactionsApiV1TransactionsGet,
-  useCreateTransactionApiV1TransactionsPost,
-  useDeleteTransactionApiV1TransactionsTransactionIdDelete,
-  useGetCategoriesApiV1CategoriesGet,
-  useGetWalletsApiV1WalletsGet,
+  useGetTransactionsV1TransactionsGet,
+  useCreateTransactionV1TransactionsPost,
+  useDeleteTransactionV1TransactionsTransactionIdDelete,
+  useGetCategoriesV1CategoriesGet,
+  useGetWalletsV1WalletsGet,
   type TransactionType,
 } from "@/lib/api";
 
@@ -63,21 +63,21 @@ export default function TransactionsPage() {
     data: transactionsData,
     isLoading,
     refetch,
-  } = useGetTransactionsApiV1TransactionsGet({
+  } = useGetTransactionsV1TransactionsGet({
     page,
     size: 20,
     ...filters,
   });
 
-  const { data: categories } = useGetCategoriesApiV1CategoriesGet();
+  const { data: categories } = useGetCategoriesV1CategoriesGet();
   console.log("categories:", categories);
-  const { data: wallets } = useGetWalletsApiV1WalletsGet();
+  const { data: wallets } = useGetWalletsV1WalletsGet();
 
   // Mutations
   const { mutate: createTransaction, isPending: isCreating } =
-    useCreateTransactionApiV1TransactionsPost();
+    useCreateTransactionV1TransactionsPost();
   const { mutate: deleteTransaction } =
-    useDeleteTransactionApiV1TransactionsTransactionIdDelete();
+    useDeleteTransactionV1TransactionsTransactionIdDelete();
 
   const {
     register,

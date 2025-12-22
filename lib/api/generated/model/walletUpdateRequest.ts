@@ -4,8 +4,8 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { WalletUpdateRequestName } from './walletUpdateRequestName';
-import type { WalletUpdateRequestCurrency } from './walletUpdateRequestCurrency';
+import type { WalletUpdateRequestName } from "./walletUpdateRequestName";
+import type { WalletUpdateRequestCurrency } from "./walletUpdateRequestCurrency";
 
 /**
  * Wallet update request.

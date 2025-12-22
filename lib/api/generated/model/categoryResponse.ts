@@ -4,8 +4,8 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryResponseIcon } from './categoryResponseIcon';
-import type { CategoryResponseColor } from './categoryResponseColor';
+import type { CategoryResponseIcon } from "./categoryResponseIcon";
+import type { CategoryResponseColor } from "./categoryResponseColor";
 
 /**
  * Category response.

@@ -4,6 +4,6 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { WalletResponse } from './walletResponse';
+import type { WalletResponse } from "./walletResponse";
 
 export type TransactionResponseWallet = WalletResponse | null;

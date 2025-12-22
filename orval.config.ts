@@ -3,7 +3,7 @@ import { defineConfig } from "orval/dist";
 export default defineConfig({
   api: {
     input: {
-      target: "http://localhost:8000/openapi.json",
+      target: "https://api-sit.jupiterpro.online/api/selfin/openapi.json",
     },
     output: {
       mode: "tags-split",

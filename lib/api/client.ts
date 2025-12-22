@@ -16,6 +16,23 @@ AXIOS_INSTANCE.interceptors.request.use(
       }
     }
 
+    // Normalize URL: if baseURL already includes the service prefix (e.g. '/api/selfin')
+    // and the generated path also starts with '/api/', strip the extra '/api' so
+    // requests become '/api/selfin/v1/...' instead of '/api/selfin/api/v1/...'.
+    try {
+      const base = config.baseURL || AXIOS_INSTANCE.defaults.baseURL;
+      if (
+        typeof base === "string" &&
+        typeof config.url === "string" &&
+        (base.endsWith("/selfin") || base.includes("/api/selfin")) &&
+        config.url.startsWith("/api/")
+      ) {
+        config.url = config.url.replace(/^\/api/, "");
+      }
+    } catch (e) {
+      // ignore normalization errors
+    }
+
     return config;
   },
   (error) => {

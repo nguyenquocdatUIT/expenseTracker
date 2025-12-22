@@ -4,16 +4,16 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { RecurringTransactionUpdateRequestType } from './recurringTransactionUpdateRequestType';
-import type { RecurringTransactionUpdateRequestAmount } from './recurringTransactionUpdateRequestAmount';
-import type { RecurringTransactionUpdateRequestCurrency } from './recurringTransactionUpdateRequestCurrency';
-import type { RecurringTransactionUpdateRequestCategoryId } from './recurringTransactionUpdateRequestCategoryId';
-import type { RecurringTransactionUpdateRequestWalletId } from './recurringTransactionUpdateRequestWalletId';
-import type { RecurringTransactionUpdateRequestToWalletId } from './recurringTransactionUpdateRequestToWalletId';
-import type { RecurringTransactionUpdateRequestDescription } from './recurringTransactionUpdateRequestDescription';
-import type { RecurringTransactionUpdateRequestFrequency } from './recurringTransactionUpdateRequestFrequency';
-import type { RecurringTransactionUpdateRequestStartDate } from './recurringTransactionUpdateRequestStartDate';
-import type { RecurringTransactionUpdateRequestIsActive } from './recurringTransactionUpdateRequestIsActive';
+import type { RecurringTransactionUpdateRequestType } from "./recurringTransactionUpdateRequestType";
+import type { RecurringTransactionUpdateRequestAmount } from "./recurringTransactionUpdateRequestAmount";
+import type { RecurringTransactionUpdateRequestCurrency } from "./recurringTransactionUpdateRequestCurrency";
+import type { RecurringTransactionUpdateRequestCategoryId } from "./recurringTransactionUpdateRequestCategoryId";
+import type { RecurringTransactionUpdateRequestWalletId } from "./recurringTransactionUpdateRequestWalletId";
+import type { RecurringTransactionUpdateRequestToWalletId } from "./recurringTransactionUpdateRequestToWalletId";
+import type { RecurringTransactionUpdateRequestDescription } from "./recurringTransactionUpdateRequestDescription";
+import type { RecurringTransactionUpdateRequestFrequency } from "./recurringTransactionUpdateRequestFrequency";
+import type { RecurringTransactionUpdateRequestStartDate } from "./recurringTransactionUpdateRequestStartDate";
+import type { RecurringTransactionUpdateRequestIsActive } from "./recurringTransactionUpdateRequestIsActive";
 
 /**
  * Recurring transaction update request.

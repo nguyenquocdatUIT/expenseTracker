@@ -5,7 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetMonthlyTransactionsApiV1TransactionsMonthlyGetParams = {
-date_from?: string | null;
-date_to?: string | null;
+export type ExportTransactionsCsvV1ReportsTransactionsCsvGetParams = {
+  date_from?: string | null;
+  date_to?: string | null;
 };

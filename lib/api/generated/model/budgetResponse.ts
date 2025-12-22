@@ -4,10 +4,10 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { BudgetResponseCategory } from './budgetResponseCategory';
-import type { BudgetResponseStartDate } from './budgetResponseStartDate';
-import type { BudgetResponseEndDate } from './budgetResponseEndDate';
-import type { BudgetResponseUpdatedAt } from './budgetResponseUpdatedAt';
+import type { BudgetResponseCategory } from "./budgetResponseCategory";
+import type { BudgetResponseStartDate } from "./budgetResponseStartDate";
+import type { BudgetResponseEndDate } from "./budgetResponseEndDate";
+import type { BudgetResponseUpdatedAt } from "./budgetResponseUpdatedAt";
 
 /**
  * Budget response with usage information.

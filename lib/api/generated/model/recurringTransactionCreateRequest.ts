@@ -4,12 +4,12 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { TransactionType } from './transactionType';
-import type { RecurringTransactionCreateRequestCategoryId } from './recurringTransactionCreateRequestCategoryId';
-import type { RecurringTransactionCreateRequestWalletId } from './recurringTransactionCreateRequestWalletId';
-import type { RecurringTransactionCreateRequestToWalletId } from './recurringTransactionCreateRequestToWalletId';
-import type { RecurringTransactionCreateRequestDescription } from './recurringTransactionCreateRequestDescription';
-import type { Frequency } from './frequency';
+import type { TransactionType } from "./transactionType";
+import type { RecurringTransactionCreateRequestCategoryId } from "./recurringTransactionCreateRequestCategoryId";
+import type { RecurringTransactionCreateRequestWalletId } from "./recurringTransactionCreateRequestWalletId";
+import type { RecurringTransactionCreateRequestToWalletId } from "./recurringTransactionCreateRequestToWalletId";
+import type { RecurringTransactionCreateRequestDescription } from "./recurringTransactionCreateRequestDescription";
+import type { Frequency } from "./frequency";
 
 /**
  * Recurring transaction creation request.

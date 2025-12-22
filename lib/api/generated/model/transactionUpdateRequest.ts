@@ -4,14 +4,14 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { TransactionUpdateRequestType } from './transactionUpdateRequestType';
-import type { TransactionUpdateRequestAmount } from './transactionUpdateRequestAmount';
-import type { TransactionUpdateRequestCurrency } from './transactionUpdateRequestCurrency';
-import type { TransactionUpdateRequestDate } from './transactionUpdateRequestDate';
-import type { TransactionUpdateRequestCategoryId } from './transactionUpdateRequestCategoryId';
-import type { TransactionUpdateRequestWalletId } from './transactionUpdateRequestWalletId';
-import type { TransactionUpdateRequestToWalletId } from './transactionUpdateRequestToWalletId';
-import type { TransactionUpdateRequestDescription } from './transactionUpdateRequestDescription';
+import type { TransactionUpdateRequestType } from "./transactionUpdateRequestType";
+import type { TransactionUpdateRequestAmount } from "./transactionUpdateRequestAmount";
+import type { TransactionUpdateRequestCurrency } from "./transactionUpdateRequestCurrency";
+import type { TransactionUpdateRequestDate } from "./transactionUpdateRequestDate";
+import type { TransactionUpdateRequestCategoryId } from "./transactionUpdateRequestCategoryId";
+import type { TransactionUpdateRequestWalletId } from "./transactionUpdateRequestWalletId";
+import type { TransactionUpdateRequestToWalletId } from "./transactionUpdateRequestToWalletId";
+import type { TransactionUpdateRequestDescription } from "./transactionUpdateRequestDescription";
 
 /**
  * Transaction update request.

@@ -4,9 +4,9 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { SpendingTrendResponseMonth } from './spendingTrendResponseMonth';
-import type { SpendingTrendResponseWeek } from './spendingTrendResponseWeek';
-import type { SpendingTrendResponseDay } from './spendingTrendResponseDay';
+import type { SpendingTrendResponseMonth } from "./spendingTrendResponseMonth";
+import type { SpendingTrendResponseWeek } from "./spendingTrendResponseWeek";
+import type { SpendingTrendResponseDay } from "./spendingTrendResponseDay";
 
 /**
  * Spending trend response.

@@ -4,15 +4,15 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { RecurringTransactionResponseCategoryId } from './recurringTransactionResponseCategoryId';
-import type { RecurringTransactionResponseCategory } from './recurringTransactionResponseCategory';
-import type { RecurringTransactionResponseWalletId } from './recurringTransactionResponseWalletId';
-import type { RecurringTransactionResponseWallet } from './recurringTransactionResponseWallet';
-import type { RecurringTransactionResponseToWalletId } from './recurringTransactionResponseToWalletId';
-import type { RecurringTransactionResponseToWallet } from './recurringTransactionResponseToWallet';
-import type { RecurringTransactionResponseDescription } from './recurringTransactionResponseDescription';
-import type { RecurringTransactionResponseLastRunDate } from './recurringTransactionResponseLastRunDate';
-import type { RecurringTransactionResponseUpdatedAt } from './recurringTransactionResponseUpdatedAt';
+import type { RecurringTransactionResponseCategoryId } from "./recurringTransactionResponseCategoryId";
+import type { RecurringTransactionResponseCategory } from "./recurringTransactionResponseCategory";
+import type { RecurringTransactionResponseWalletId } from "./recurringTransactionResponseWalletId";
+import type { RecurringTransactionResponseWallet } from "./recurringTransactionResponseWallet";
+import type { RecurringTransactionResponseToWalletId } from "./recurringTransactionResponseToWalletId";
+import type { RecurringTransactionResponseToWallet } from "./recurringTransactionResponseToWallet";
+import type { RecurringTransactionResponseDescription } from "./recurringTransactionResponseDescription";
+import type { RecurringTransactionResponseLastRunDate } from "./recurringTransactionResponseLastRunDate";
+import type { RecurringTransactionResponseUpdatedAt } from "./recurringTransactionResponseUpdatedAt";
 
 /**
  * Recurring transaction response.

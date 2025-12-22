@@ -8,13 +8,12 @@
 /**
  * Recurring frequency.
  */
-export type Frequency = typeof Frequency[keyof typeof Frequency];
-
+export type Frequency = (typeof Frequency)[keyof typeof Frequency];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const Frequency = {
-  DAILY: 'DAILY',
-  WEEKLY: 'WEEKLY',
-  MONTHLY: 'MONTHLY',
-  YEARLY: 'YEARLY',
+  DAILY: "DAILY",
+  WEEKLY: "WEEKLY",
+  MONTHLY: "MONTHLY",
+  YEARLY: "YEARLY",
 } as const;

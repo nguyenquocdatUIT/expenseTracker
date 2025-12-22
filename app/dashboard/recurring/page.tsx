@@ -29,12 +29,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
 import {
-  useGetRecurringTransactionsApiV1RecurringTransactionsGet,
-  useCreateRecurringTransactionApiV1RecurringTransactionsPost,
-  useUpdateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch,
-  useDeleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete,
-  useGetCategoriesApiV1CategoriesGet,
-  useGetWalletsApiV1WalletsGet,
+  useGetRecurringTransactionsV1RecurringTransactionsGet,
+  useCreateRecurringTransactionV1RecurringTransactionsPost,
+  useUpdateRecurringTransactionV1RecurringTransactionsRecurringIdPatch,
+  useDeleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete,
+  useGetCategoriesV1CategoriesGet,
+  useGetWalletsV1WalletsGet,
 } from "@/lib/api";
 
 const recurringSchema = z.object({
@@ -88,20 +88,20 @@ export default function RecurringTransactionsPage() {
     data: recurringData,
     isLoading: recurringLoading,
     refetch: refetchRecurring,
-  } = useGetRecurringTransactionsApiV1RecurringTransactionsGet();
+  } = useGetRecurringTransactionsV1RecurringTransactionsGet();
 
   const { data: categoriesData, isLoading: categoriesLoading } =
-    useGetCategoriesApiV1CategoriesGet();
+    useGetCategoriesV1CategoriesGet();
 
   const { data: walletsData, isLoading: walletsLoading } =
-    useGetWalletsApiV1WalletsGet();
+    useGetWalletsV1WalletsGet();
 
   const { mutate: createRecurring } =
-    useCreateRecurringTransactionApiV1RecurringTransactionsPost();
+    useCreateRecurringTransactionV1RecurringTransactionsPost();
   const { mutate: updateRecurring } =
-    useUpdateRecurringTransactionApiV1RecurringTransactionsRecurringIdPatch();
+    useUpdateRecurringTransactionV1RecurringTransactionsRecurringIdPatch();
   const { mutate: deleteRecurring } =
-    useDeleteRecurringTransactionApiV1RecurringTransactionsRecurringIdDelete();
+    useDeleteRecurringTransactionV1RecurringTransactionsRecurringIdDelete();
 
   useEffect(() => {
     setLoading(recurringLoading || categoriesLoading || walletsLoading);

@@ -4,9 +4,9 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { CategoryType } from './categoryType';
-import type { CategoryCreateRequestIcon } from './categoryCreateRequestIcon';
-import type { CategoryCreateRequestColor } from './categoryCreateRequestColor';
+import type { CategoryType } from "./categoryType";
+import type { CategoryCreateRequestIcon } from "./categoryCreateRequestIcon";
+import type { CategoryCreateRequestColor } from "./categoryCreateRequestColor";
 
 /**
  * Category creation request.

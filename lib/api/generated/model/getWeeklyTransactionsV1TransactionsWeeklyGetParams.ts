@@ -5,7 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetParams = {
-date_from: string;
-date_to: string;
+export type GetWeeklyTransactionsV1TransactionsWeeklyGetParams = {
+  date_from?: string | null;
+  date_to?: string | null;
 };

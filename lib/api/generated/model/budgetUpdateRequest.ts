@@ -4,10 +4,10 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { BudgetUpdateRequestAmountLimit } from './budgetUpdateRequestAmountLimit';
-import type { BudgetUpdateRequestPeriodType } from './budgetUpdateRequestPeriodType';
-import type { BudgetUpdateRequestStartDate } from './budgetUpdateRequestStartDate';
-import type { BudgetUpdateRequestEndDate } from './budgetUpdateRequestEndDate';
+import type { BudgetUpdateRequestAmountLimit } from "./budgetUpdateRequestAmountLimit";
+import type { BudgetUpdateRequestPeriodType } from "./budgetUpdateRequestPeriodType";
+import type { BudgetUpdateRequestStartDate } from "./budgetUpdateRequestStartDate";
+import type { BudgetUpdateRequestEndDate } from "./budgetUpdateRequestEndDate";
 
 /**
  * Budget update request.

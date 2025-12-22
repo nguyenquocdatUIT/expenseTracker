@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useCreateCategoryApiV1CategoriesPost } from "@/lib/api";
+import { useCreateCategoryV1CategoriesPost } from "@/lib/api";
 import type { CategoryType } from "@/lib/api";
 
 export default function CreateCategoryExample() {
@@ -9,7 +9,7 @@ export default function CreateCategoryExample() {
   const [type, setType] = useState<CategoryType>("EXPENSE");
 
   const { mutate, isPending, isSuccess, error } =
-    useCreateCategoryApiV1CategoriesPost();
+    useCreateCategoryV1CategoriesPost();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -4,9 +4,7 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useQuery
-} from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -16,495 +14,1053 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
+  UseQueryResult,
+} from "@tanstack/react-query";
 
 import type {
   CategorySpendingResponse,
-  ExportTransactionsCsvApiV1ReportsTransactionsCsvGetParams,
-  ExportTransactionsPdfApiV1ReportsTransactionsPdfGetParams,
-  GetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetParams,
-  GetSpendingTrendApiV1AnalyticsSpendingTrendGetParams,
-  GetTopCategoriesApiV1AnalyticsTopCategoriesGetParams,
+  ExportTransactionsCsvV1ReportsTransactionsCsvGetParams,
+  ExportTransactionsPdfV1ReportsTransactionsPdfGetParams,
+  GetSpendingByCategoryV1AnalyticsSpendingByCategoryGetParams,
+  GetSpendingTrendV1AnalyticsSpendingTrendGetParams,
+  GetTopCategoriesV1AnalyticsTopCategoriesGetParams,
   HTTPValidationError,
   SpendingTrendResponse,
-  TopCategoryResponse
-} from '.././model';
+  TopCategoryResponse,
+} from ".././model";
 
-import { customInstance } from '../../client';
-
+import { customInstance } from "../../client";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
 
 /**
  * Get spending breakdown by category.
  * @summary Get Spending By Category
  */
-export const getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet = (
-    params: GetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetParams,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const getSpendingByCategoryV1AnalyticsSpendingByCategoryGet = (
+  params: GetSpendingByCategoryV1AnalyticsSpendingByCategoryGetParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<CategorySpendingResponse[]>(
-      {url: `/api/v1/analytics/spending-by-category`, method: 'GET',
-        params, signal
+  return customInstance<CategorySpendingResponse[]>(
+    {
+      url: `/v1/analytics/spending-by-category`,
+      method: "GET",
+      params,
+      signal,
     },
-      options);
-    }
-  
+    options,
+  );
+};
 
-
-
-export const getGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetQueryKey = (params?: GetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetParams,) => {
+export const getGetSpendingByCategoryV1AnalyticsSpendingByCategoryGetQueryKey =
+  (params?: GetSpendingByCategoryV1AnalyticsSpendingByCategoryGetParams) => {
     return [
-    `/api/v1/analytics/spending-by-category`, ...(params ? [params]: [])
+      `/v1/analytics/spending-by-category`,
+      ...(params ? [params] : []),
     ] as const;
-    }
+  };
 
-    
-export const getGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetQueryOptions = <TData = Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>, TError = HTTPValidationError>(params: GetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
+export const getGetSpendingByCategoryV1AnalyticsSpendingByCategoryGetQueryOptions =
+  <
+    TData = Awaited<
+      ReturnType<typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet>
+    >,
+    TError = HTTPValidationError,
+  >(
+    params: GetSpendingByCategoryV1AnalyticsSpendingByCategoryGetParams,
+    options?: {
+      query?: Partial<
+        UseQueryOptions<
+          Awaited<
+            ReturnType<
+              typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet
+            >
+          >,
+          TError,
+          TData
+        >
+      >;
+      request?: SecondParameter<typeof customInstance>;
+    },
+  ) => {
+    const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+    const queryKey =
+      queryOptions?.queryKey ??
+      getGetSpendingByCategoryV1AnalyticsSpendingByCategoryGetQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetQueryKey(params);
+    const queryFn: QueryFunction<
+      Awaited<
+        ReturnType<typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet>
+      >
+    > = ({ signal }) =>
+      getSpendingByCategoryV1AnalyticsSpendingByCategoryGet(
+        params,
+        requestOptions,
+        signal,
+      );
 
-  
+    return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+      Awaited<
+        ReturnType<typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet>
+      >,
+      TError,
+      TData
+    > & { queryKey: DataTag<QueryKey, TData, TError> };
+  };
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>> = ({ signal }) => getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet(params, requestOptions, signal);
+export type GetSpendingByCategoryV1AnalyticsSpendingByCategoryGetQueryResult =
+  NonNullable<
+    Awaited<
+      ReturnType<typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet>
+    >
+  >;
+export type GetSpendingByCategoryV1AnalyticsSpendingByCategoryGetQueryError =
+  HTTPValidationError;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetQueryResult = NonNullable<Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>>
-export type GetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetQueryError = HTTPValidationError
-
-
-export function useGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet<TData = Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>, TError = HTTPValidationError>(
- params: GetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>, TError, TData>> & Pick<
+export function useGetSpendingByCategoryV1AnalyticsSpendingByCategoryGet<
+  TData = Awaited<
+    ReturnType<typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetSpendingByCategoryV1AnalyticsSpendingByCategoryGetParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<
+            typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet
+          >
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>,
+          Awaited<
+            ReturnType<
+              typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet
+            >
+          >,
           TError,
-          Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet<TData = Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>, TError = HTTPValidationError>(
- params: GetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>, TError, TData>> & Pick<
+          Awaited<
+            ReturnType<
+              typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet
+            >
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetSpendingByCategoryV1AnalyticsSpendingByCategoryGet<
+  TData = Awaited<
+    ReturnType<typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetSpendingByCategoryV1AnalyticsSpendingByCategoryGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<
+            typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet
+          >
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>,
+          Awaited<
+            ReturnType<
+              typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet
+            >
+          >,
           TError,
-          Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet<TData = Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>, TError = HTTPValidationError>(
- params: GetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<
+            ReturnType<
+              typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet
+            >
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetSpendingByCategoryV1AnalyticsSpendingByCategoryGet<
+  TData = Awaited<
+    ReturnType<typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetSpendingByCategoryV1AnalyticsSpendingByCategoryGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<
+            typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet
+          >
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get Spending By Category
  */
 
-export function useGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet<TData = Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>, TError = HTTPValidationError>(
- params: GetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetSpendingByCategoryV1AnalyticsSpendingByCategoryGet<
+  TData = Awaited<
+    ReturnType<typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetSpendingByCategoryV1AnalyticsSpendingByCategoryGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<
+            typeof getSpendingByCategoryV1AnalyticsSpendingByCategoryGet
+          >
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions =
+    getGetSpendingByCategoryV1AnalyticsSpendingByCategoryGetQueryOptions(
+      params,
+      options,
+    );
 
-  const queryOptions = getGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGetQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get spending trend over time.
  * @summary Get Spending Trend
  */
-export const getSpendingTrendApiV1AnalyticsSpendingTrendGet = (
-    params: GetSpendingTrendApiV1AnalyticsSpendingTrendGetParams,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const getSpendingTrendV1AnalyticsSpendingTrendGet = (
+  params: GetSpendingTrendV1AnalyticsSpendingTrendGetParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<SpendingTrendResponse[]>(
-      {url: `/api/v1/analytics/spending-trend`, method: 'GET',
-        params, signal
-    },
-      options);
-    }
-  
+  return customInstance<SpendingTrendResponse[]>(
+    { url: `/v1/analytics/spending-trend`, method: "GET", params, signal },
+    options,
+  );
+};
 
-
-
-export const getGetSpendingTrendApiV1AnalyticsSpendingTrendGetQueryKey = (params?: GetSpendingTrendApiV1AnalyticsSpendingTrendGetParams,) => {
-    return [
-    `/api/v1/analytics/spending-trend`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getGetSpendingTrendApiV1AnalyticsSpendingTrendGetQueryOptions = <TData = Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>, TError = HTTPValidationError>(params: GetSpendingTrendApiV1AnalyticsSpendingTrendGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetSpendingTrendV1AnalyticsSpendingTrendGetQueryKey = (
+  params?: GetSpendingTrendV1AnalyticsSpendingTrendGetParams,
 ) => {
+  return [`/v1/analytics/spending-trend`, ...(params ? [params] : [])] as const;
+};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+export const getGetSpendingTrendV1AnalyticsSpendingTrendGetQueryOptions = <
+  TData = Awaited<
+    ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetSpendingTrendV1AnalyticsSpendingTrendGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetSpendingTrendApiV1AnalyticsSpendingTrendGetQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ??
+    getGetSpendingTrendV1AnalyticsSpendingTrendGetQueryKey(params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>>
+  > = ({ signal }) =>
+    getSpendingTrendV1AnalyticsSpendingTrendGet(params, requestOptions, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>> = ({ signal }) => getSpendingTrendApiV1AnalyticsSpendingTrendGet(params, requestOptions, signal);
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type GetSpendingTrendV1AnalyticsSpendingTrendGetQueryResult =
+  NonNullable<
+    Awaited<ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>>
+  >;
+export type GetSpendingTrendV1AnalyticsSpendingTrendGetQueryError =
+  HTTPValidationError;
 
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetSpendingTrendApiV1AnalyticsSpendingTrendGetQueryResult = NonNullable<Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>>
-export type GetSpendingTrendApiV1AnalyticsSpendingTrendGetQueryError = HTTPValidationError
-
-
-export function useGetSpendingTrendApiV1AnalyticsSpendingTrendGet<TData = Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>, TError = HTTPValidationError>(
- params: GetSpendingTrendApiV1AnalyticsSpendingTrendGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>, TError, TData>> & Pick<
+export function useGetSpendingTrendV1AnalyticsSpendingTrendGet<
+  TData = Awaited<
+    ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetSpendingTrendV1AnalyticsSpendingTrendGetParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>,
+          Awaited<
+            ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>
+          >,
           TError,
-          Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetSpendingTrendApiV1AnalyticsSpendingTrendGet<TData = Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>, TError = HTTPValidationError>(
- params: GetSpendingTrendApiV1AnalyticsSpendingTrendGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>, TError, TData>> & Pick<
+          Awaited<
+            ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetSpendingTrendV1AnalyticsSpendingTrendGet<
+  TData = Awaited<
+    ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetSpendingTrendV1AnalyticsSpendingTrendGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>,
+          Awaited<
+            ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>
+          >,
           TError,
-          Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetSpendingTrendApiV1AnalyticsSpendingTrendGet<TData = Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>, TError = HTTPValidationError>(
- params: GetSpendingTrendApiV1AnalyticsSpendingTrendGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<
+            ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetSpendingTrendV1AnalyticsSpendingTrendGet<
+  TData = Awaited<
+    ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetSpendingTrendV1AnalyticsSpendingTrendGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get Spending Trend
  */
 
-export function useGetSpendingTrendApiV1AnalyticsSpendingTrendGet<TData = Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>, TError = HTTPValidationError>(
- params: GetSpendingTrendApiV1AnalyticsSpendingTrendGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSpendingTrendApiV1AnalyticsSpendingTrendGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetSpendingTrendV1AnalyticsSpendingTrendGet<
+  TData = Awaited<
+    ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetSpendingTrendV1AnalyticsSpendingTrendGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSpendingTrendV1AnalyticsSpendingTrendGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions =
+    getGetSpendingTrendV1AnalyticsSpendingTrendGetQueryOptions(params, options);
 
-  const queryOptions = getGetSpendingTrendApiV1AnalyticsSpendingTrendGetQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Get top spending categories.
  * @summary Get Top Categories
  */
-export const getTopCategoriesApiV1AnalyticsTopCategoriesGet = (
-    params: GetTopCategoriesApiV1AnalyticsTopCategoriesGetParams,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const getTopCategoriesV1AnalyticsTopCategoriesGet = (
+  params: GetTopCategoriesV1AnalyticsTopCategoriesGetParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<TopCategoryResponse[]>(
-      {url: `/api/v1/analytics/top-categories`, method: 'GET',
-        params, signal
-    },
-      options);
-    }
-  
+  return customInstance<TopCategoryResponse[]>(
+    { url: `/v1/analytics/top-categories`, method: "GET", params, signal },
+    options,
+  );
+};
 
-
-
-export const getGetTopCategoriesApiV1AnalyticsTopCategoriesGetQueryKey = (params?: GetTopCategoriesApiV1AnalyticsTopCategoriesGetParams,) => {
-    return [
-    `/api/v1/analytics/top-categories`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getGetTopCategoriesApiV1AnalyticsTopCategoriesGetQueryOptions = <TData = Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>, TError = HTTPValidationError>(params: GetTopCategoriesApiV1AnalyticsTopCategoriesGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetTopCategoriesV1AnalyticsTopCategoriesGetQueryKey = (
+  params?: GetTopCategoriesV1AnalyticsTopCategoriesGetParams,
 ) => {
+  return [`/v1/analytics/top-categories`, ...(params ? [params] : [])] as const;
+};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+export const getGetTopCategoriesV1AnalyticsTopCategoriesGetQueryOptions = <
+  TData = Awaited<
+    ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetTopCategoriesV1AnalyticsTopCategoriesGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetTopCategoriesApiV1AnalyticsTopCategoriesGetQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ??
+    getGetTopCategoriesV1AnalyticsTopCategoriesGetQueryKey(params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>>
+  > = ({ signal }) =>
+    getTopCategoriesV1AnalyticsTopCategoriesGet(params, requestOptions, signal);
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>> = ({ signal }) => getTopCategoriesApiV1AnalyticsTopCategoriesGet(params, requestOptions, signal);
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type GetTopCategoriesV1AnalyticsTopCategoriesGetQueryResult =
+  NonNullable<
+    Awaited<ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>>
+  >;
+export type GetTopCategoriesV1AnalyticsTopCategoriesGetQueryError =
+  HTTPValidationError;
 
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetTopCategoriesApiV1AnalyticsTopCategoriesGetQueryResult = NonNullable<Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>>
-export type GetTopCategoriesApiV1AnalyticsTopCategoriesGetQueryError = HTTPValidationError
-
-
-export function useGetTopCategoriesApiV1AnalyticsTopCategoriesGet<TData = Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>, TError = HTTPValidationError>(
- params: GetTopCategoriesApiV1AnalyticsTopCategoriesGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>, TError, TData>> & Pick<
+export function useGetTopCategoriesV1AnalyticsTopCategoriesGet<
+  TData = Awaited<
+    ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetTopCategoriesV1AnalyticsTopCategoriesGetParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>,
+          Awaited<
+            ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>
+          >,
           TError,
-          Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetTopCategoriesApiV1AnalyticsTopCategoriesGet<TData = Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>, TError = HTTPValidationError>(
- params: GetTopCategoriesApiV1AnalyticsTopCategoriesGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>, TError, TData>> & Pick<
+          Awaited<
+            ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetTopCategoriesV1AnalyticsTopCategoriesGet<
+  TData = Awaited<
+    ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetTopCategoriesV1AnalyticsTopCategoriesGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>,
+          Awaited<
+            ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>
+          >,
           TError,
-          Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetTopCategoriesApiV1AnalyticsTopCategoriesGet<TData = Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>, TError = HTTPValidationError>(
- params: GetTopCategoriesApiV1AnalyticsTopCategoriesGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<
+            ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetTopCategoriesV1AnalyticsTopCategoriesGet<
+  TData = Awaited<
+    ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetTopCategoriesV1AnalyticsTopCategoriesGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get Top Categories
  */
 
-export function useGetTopCategoriesApiV1AnalyticsTopCategoriesGet<TData = Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>, TError = HTTPValidationError>(
- params: GetTopCategoriesApiV1AnalyticsTopCategoriesGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getTopCategoriesApiV1AnalyticsTopCategoriesGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetTopCategoriesV1AnalyticsTopCategoriesGet<
+  TData = Awaited<
+    ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: GetTopCategoriesV1AnalyticsTopCategoriesGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getTopCategoriesV1AnalyticsTopCategoriesGet>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions =
+    getGetTopCategoriesV1AnalyticsTopCategoriesGetQueryOptions(params, options);
 
-  const queryOptions = getGetTopCategoriesApiV1AnalyticsTopCategoriesGetQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Export transactions as CSV.
  * @summary Export Transactions Csv
  */
-export const exportTransactionsCsvApiV1ReportsTransactionsCsvGet = (
-    params?: ExportTransactionsCsvApiV1ReportsTransactionsCsvGetParams,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const exportTransactionsCsvV1ReportsTransactionsCsvGet = (
+  params?: ExportTransactionsCsvV1ReportsTransactionsCsvGetParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<unknown>(
-      {url: `/api/v1/reports/transactions.csv`, method: 'GET',
-        params, signal
-    },
-      options);
-    }
-  
+  return customInstance<unknown>(
+    { url: `/v1/reports/transactions.csv`, method: "GET", params, signal },
+    options,
+  );
+};
 
-
-
-export const getExportTransactionsCsvApiV1ReportsTransactionsCsvGetQueryKey = (params?: ExportTransactionsCsvApiV1ReportsTransactionsCsvGetParams,) => {
-    return [
-    `/api/v1/reports/transactions.csv`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getExportTransactionsCsvApiV1ReportsTransactionsCsvGetQueryOptions = <TData = Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>, TError = HTTPValidationError>(params?: ExportTransactionsCsvApiV1ReportsTransactionsCsvGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getExportTransactionsCsvV1ReportsTransactionsCsvGetQueryKey = (
+  params?: ExportTransactionsCsvV1ReportsTransactionsCsvGetParams,
 ) => {
+  return [`/v1/reports/transactions.csv`, ...(params ? [params] : [])] as const;
+};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+export const getExportTransactionsCsvV1ReportsTransactionsCsvGetQueryOptions = <
+  TData = Awaited<
+    ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params?: ExportTransactionsCsvV1ReportsTransactionsCsvGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getExportTransactionsCsvApiV1ReportsTransactionsCsvGetQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ??
+    getExportTransactionsCsvV1ReportsTransactionsCsvGetQueryKey(params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>>
+  > = ({ signal }) =>
+    exportTransactionsCsvV1ReportsTransactionsCsvGet(
+      params,
+      requestOptions,
+      signal,
+    );
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>> = ({ signal }) => exportTransactionsCsvApiV1ReportsTransactionsCsvGet(params, requestOptions, signal);
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<
+      ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+    >,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type ExportTransactionsCsvV1ReportsTransactionsCsvGetQueryResult =
+  NonNullable<
+    Awaited<ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>>
+  >;
+export type ExportTransactionsCsvV1ReportsTransactionsCsvGetQueryError =
+  HTTPValidationError;
 
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ExportTransactionsCsvApiV1ReportsTransactionsCsvGetQueryResult = NonNullable<Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>>
-export type ExportTransactionsCsvApiV1ReportsTransactionsCsvGetQueryError = HTTPValidationError
-
-
-export function useExportTransactionsCsvApiV1ReportsTransactionsCsvGet<TData = Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>, TError = HTTPValidationError>(
- params: undefined |  ExportTransactionsCsvApiV1ReportsTransactionsCsvGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>, TError, TData>> & Pick<
+export function useExportTransactionsCsvV1ReportsTransactionsCsvGet<
+  TData = Awaited<
+    ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: undefined | ExportTransactionsCsvV1ReportsTransactionsCsvGetParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>,
+          Awaited<
+            ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+          >,
           TError,
-          Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useExportTransactionsCsvApiV1ReportsTransactionsCsvGet<TData = Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>, TError = HTTPValidationError>(
- params?: ExportTransactionsCsvApiV1ReportsTransactionsCsvGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>, TError, TData>> & Pick<
+          Awaited<
+            ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useExportTransactionsCsvV1ReportsTransactionsCsvGet<
+  TData = Awaited<
+    ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params?: ExportTransactionsCsvV1ReportsTransactionsCsvGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>,
+          Awaited<
+            ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+          >,
           TError,
-          Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useExportTransactionsCsvApiV1ReportsTransactionsCsvGet<TData = Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>, TError = HTTPValidationError>(
- params?: ExportTransactionsCsvApiV1ReportsTransactionsCsvGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<
+            ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useExportTransactionsCsvV1ReportsTransactionsCsvGet<
+  TData = Awaited<
+    ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params?: ExportTransactionsCsvV1ReportsTransactionsCsvGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Export Transactions Csv
  */
 
-export function useExportTransactionsCsvApiV1ReportsTransactionsCsvGet<TData = Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>, TError = HTTPValidationError>(
- params?: ExportTransactionsCsvApiV1ReportsTransactionsCsvGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsCsvApiV1ReportsTransactionsCsvGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useExportTransactionsCsvV1ReportsTransactionsCsvGet<
+  TData = Awaited<
+    ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params?: ExportTransactionsCsvV1ReportsTransactionsCsvGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof exportTransactionsCsvV1ReportsTransactionsCsvGet>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions =
+    getExportTransactionsCsvV1ReportsTransactionsCsvGetQueryOptions(
+      params,
+      options,
+    );
 
-  const queryOptions = getExportTransactionsCsvApiV1ReportsTransactionsCsvGetQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * Export transactions as PDF.
  * @summary Export Transactions Pdf
  */
-export const exportTransactionsPdfApiV1ReportsTransactionsPdfGet = (
-    params?: ExportTransactionsPdfApiV1ReportsTransactionsPdfGetParams,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+export const exportTransactionsPdfV1ReportsTransactionsPdfGet = (
+  params?: ExportTransactionsPdfV1ReportsTransactionsPdfGetParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<unknown>(
-      {url: `/api/v1/reports/transactions.pdf`, method: 'GET',
-        params, signal
-    },
-      options);
-    }
-  
+  return customInstance<unknown>(
+    { url: `/v1/reports/transactions.pdf`, method: "GET", params, signal },
+    options,
+  );
+};
 
-
-
-export const getExportTransactionsPdfApiV1ReportsTransactionsPdfGetQueryKey = (params?: ExportTransactionsPdfApiV1ReportsTransactionsPdfGetParams,) => {
-    return [
-    `/api/v1/reports/transactions.pdf`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getExportTransactionsPdfApiV1ReportsTransactionsPdfGetQueryOptions = <TData = Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>, TError = HTTPValidationError>(params?: ExportTransactionsPdfApiV1ReportsTransactionsPdfGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getExportTransactionsPdfV1ReportsTransactionsPdfGetQueryKey = (
+  params?: ExportTransactionsPdfV1ReportsTransactionsPdfGetParams,
 ) => {
+  return [`/v1/reports/transactions.pdf`, ...(params ? [params] : [])] as const;
+};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+export const getExportTransactionsPdfV1ReportsTransactionsPdfGetQueryOptions = <
+  TData = Awaited<
+    ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params?: ExportTransactionsPdfV1ReportsTransactionsPdfGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getExportTransactionsPdfApiV1ReportsTransactionsPdfGetQueryKey(params);
+  const queryKey =
+    queryOptions?.queryKey ??
+    getExportTransactionsPdfV1ReportsTransactionsPdfGetQueryKey(params);
 
-  
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>>
+  > = ({ signal }) =>
+    exportTransactionsPdfV1ReportsTransactionsPdfGet(
+      params,
+      requestOptions,
+      signal,
+    );
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>> = ({ signal }) => exportTransactionsPdfApiV1ReportsTransactionsPdfGet(params, requestOptions, signal);
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<
+      ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+    >,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-      
+export type ExportTransactionsPdfV1ReportsTransactionsPdfGetQueryResult =
+  NonNullable<
+    Awaited<ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>>
+  >;
+export type ExportTransactionsPdfV1ReportsTransactionsPdfGetQueryError =
+  HTTPValidationError;
 
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ExportTransactionsPdfApiV1ReportsTransactionsPdfGetQueryResult = NonNullable<Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>>
-export type ExportTransactionsPdfApiV1ReportsTransactionsPdfGetQueryError = HTTPValidationError
-
-
-export function useExportTransactionsPdfApiV1ReportsTransactionsPdfGet<TData = Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>, TError = HTTPValidationError>(
- params: undefined |  ExportTransactionsPdfApiV1ReportsTransactionsPdfGetParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>, TError, TData>> & Pick<
+export function useExportTransactionsPdfV1ReportsTransactionsPdfGet<
+  TData = Awaited<
+    ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params: undefined | ExportTransactionsPdfV1ReportsTransactionsPdfGetParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>,
+          Awaited<
+            ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+          >,
           TError,
-          Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useExportTransactionsPdfApiV1ReportsTransactionsPdfGet<TData = Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>, TError = HTTPValidationError>(
- params?: ExportTransactionsPdfApiV1ReportsTransactionsPdfGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>, TError, TData>> & Pick<
+          Awaited<
+            ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useExportTransactionsPdfV1ReportsTransactionsPdfGet<
+  TData = Awaited<
+    ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params?: ExportTransactionsPdfV1ReportsTransactionsPdfGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+        >,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>,
+          Awaited<
+            ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+          >,
           TError,
-          Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useExportTransactionsPdfApiV1ReportsTransactionsPdfGet<TData = Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>, TError = HTTPValidationError>(
- params?: ExportTransactionsPdfApiV1ReportsTransactionsPdfGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+          Awaited<
+            ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+          >
+        >,
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useExportTransactionsPdfV1ReportsTransactionsPdfGet<
+  TData = Awaited<
+    ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params?: ExportTransactionsPdfV1ReportsTransactionsPdfGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Export Transactions Pdf
  */
 
-export function useExportTransactionsPdfApiV1ReportsTransactionsPdfGet<TData = Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>, TError = HTTPValidationError>(
- params?: ExportTransactionsPdfApiV1ReportsTransactionsPdfGetParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportTransactionsPdfApiV1ReportsTransactionsPdfGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useExportTransactionsPdfV1ReportsTransactionsPdfGet<
+  TData = Awaited<
+    ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+  >,
+  TError = HTTPValidationError,
+>(
+  params?: ExportTransactionsPdfV1ReportsTransactionsPdfGetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<
+          ReturnType<typeof exportTransactionsPdfV1ReportsTransactionsPdfGet>
+        >,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions =
+    getExportTransactionsPdfV1ReportsTransactionsPdfGetQueryOptions(
+      params,
+      options,
+    );
 
-  const queryOptions = getExportTransactionsPdfApiV1ReportsTransactionsPdfGetQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
-

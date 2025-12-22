@@ -9,7 +9,7 @@ import { Link } from "@heroui/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useRegisterApiV1AuthRegisterPost } from "@/lib/api";
+import { useRegisterV1AuthRegisterPost } from "@/lib/api";
 
 const registerSchema = z
   .object({
@@ -30,7 +30,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
 
   const { mutate: registerUser, isPending } =
-    useRegisterApiV1AuthRegisterPost();
+    useRegisterV1AuthRegisterPost();
 
   const {
     register,

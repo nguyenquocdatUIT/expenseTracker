@@ -30,10 +30,10 @@ import {
   endOfDay,
 } from "date-fns";
 import {
-  useGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet,
-  useGetSpendingTrendApiV1AnalyticsSpendingTrendGet,
-  useGetTopCategoriesApiV1AnalyticsTopCategoriesGet,
-  useGetWalletsApiV1WalletsGet,
+  useGetSpendingByCategoryV1AnalyticsSpendingByCategoryGet,
+  useGetSpendingTrendV1AnalyticsSpendingTrendGet,
+  useGetTopCategoriesV1AnalyticsTopCategoriesGet,
+  useGetWalletsV1WalletsGet,
 } from "@/lib/api";
 
 interface AnalyticsData {
@@ -102,7 +102,7 @@ export default function DashboardPage() {
   const { date_from, date_to } = getDateRange();
 
   const { data: spendingByCategory } =
-    useGetSpendingByCategoryApiV1AnalyticsSpendingByCategoryGet({
+    useGetSpendingByCategoryV1AnalyticsSpendingByCategoryGet({
       date_from,
       date_to,
     });
@@ -114,18 +114,18 @@ export default function DashboardPage() {
   );
   const trendTo = format(endOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss");
   const { data: spendingTrend } =
-    useGetSpendingTrendApiV1AnalyticsSpendingTrendGet({
+    useGetSpendingTrendV1AnalyticsSpendingTrendGet({
       date_from: trendFrom,
       date_to: trendTo,
       group_by: "month",
     });
   const { data: topCategories } =
-    useGetTopCategoriesApiV1AnalyticsTopCategoriesGet({
+    useGetTopCategoriesV1AnalyticsTopCategoriesGet({
       date_from,
       date_to,
       limit: 5,
     });
-  const { data: wallets } = useGetWalletsApiV1WalletsGet();
+  const { data: wallets } = useGetWalletsV1WalletsGet();
 
   useEffect(() => {
     setLoading(

@@ -4,7 +4,7 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { ValidationErrorLocItem } from './validationErrorLocItem';
+import type { ValidationErrorLocItem } from "./validationErrorLocItem";
 
 export interface ValidationError {
   loc: ValidationErrorLocItem[];

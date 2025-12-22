@@ -4,6 +4,6 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { Frequency } from './frequency';
+import type { Frequency } from "./frequency";
 
 export type RecurringTransactionUpdateRequestFrequency = Frequency | null;

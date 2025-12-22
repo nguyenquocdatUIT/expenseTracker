@@ -4,6 +4,6 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { PeriodType } from './periodType';
+import type { PeriodType } from "./periodType";
 
 export type BudgetUpdateRequestPeriodType = PeriodType | null;

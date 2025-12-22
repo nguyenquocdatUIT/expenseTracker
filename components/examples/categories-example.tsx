@@ -1,13 +1,13 @@
 "use client";
 
-import { useGetCategoriesApiV1CategoriesGet } from "@/lib/api";
+import { useGetCategoriesV1CategoriesGet } from "@/lib/api";
 
 export default function CategoriesExample() {
   const {
     data: categories,
     isLoading,
     error,
-  } = useGetCategoriesApiV1CategoriesGet();
+  } = useGetCategoriesV1CategoriesGet();
 
   if (isLoading) {
     return <div>Loading categories...</div>;

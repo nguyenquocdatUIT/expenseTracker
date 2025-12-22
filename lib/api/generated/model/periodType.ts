@@ -8,12 +8,11 @@
 /**
  * Budget period type.
  */
-export type PeriodType = typeof PeriodType[keyof typeof PeriodType];
-
+export type PeriodType = (typeof PeriodType)[keyof typeof PeriodType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PeriodType = {
-  MONTHLY: 'MONTHLY',
-  WEEKLY: 'WEEKLY',
-  CUSTOM: 'CUSTOM',
+  MONTHLY: "MONTHLY",
+  WEEKLY: "WEEKLY",
+  CUSTOM: "CUSTOM",
 } as const;

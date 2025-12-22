@@ -4,9 +4,9 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { PeriodType } from './periodType';
-import type { BudgetCreateRequestStartDate } from './budgetCreateRequestStartDate';
-import type { BudgetCreateRequestEndDate } from './budgetCreateRequestEndDate';
+import type { PeriodType } from "./periodType";
+import type { BudgetCreateRequestStartDate } from "./budgetCreateRequestStartDate";
+import type { BudgetCreateRequestEndDate } from "./budgetCreateRequestEndDate";
 
 /**
  * Budget creation request.

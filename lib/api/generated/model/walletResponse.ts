@@ -4,7 +4,7 @@
  * Personal Finance API
  * OpenAPI spec version: 1.0.0
  */
-import type { WalletResponseUpdatedAt } from './walletResponseUpdatedAt';
+import type { WalletResponseUpdatedAt } from "./walletResponseUpdatedAt";
 
 /**
  * Wallet response.
