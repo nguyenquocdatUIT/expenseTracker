@@ -455,13 +455,16 @@ export default function BudgetsPage() {
                   selectedKeys={
                     watch("categoryId") ? [watch("categoryId")] : []
                   }
-                  onChange={(e) =>
-                    setValue("categoryId", e.target.value, {
-                      shouldValidate: true,
-                      shouldDirty: true,
-                    })
-                  }
-                  disabled={categoriesLoading}
+                  onSelectionChange={(keys) => {
+                    const selectedKey = Array.from(keys)[0];
+                    if (selectedKey) {
+                      setValue("categoryId", String(selectedKey), {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }
+                  }}
+                  isDisabled={categoriesLoading}
                   isInvalid={!!errors.categoryId}
                   errorMessage={errors.categoryId?.message}
                 >

@@ -158,10 +158,10 @@ export default function TransactionsPage() {
 
       <Card className="border-gray-200 dark:border-gray-700">
         <CardHeader>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex flex-row gap-2 flex-wrap items-end w-full">
             <Select
               label="Loại"
-              className="max-w-xs"
+              className="flex-1 min-w-[150px]"
               selectedKeys={
                 filters.transaction_type ? [filters.transaction_type] : []
               }
@@ -179,7 +179,7 @@ export default function TransactionsPage() {
 
             <Select
               label="Danh mục"
-              className="max-w-xs"
+              className="flex-1 min-w-[150px]"
               selectedKeys={
                 filters.category_id ? [String(filters.category_id)] : []
               }
@@ -197,7 +197,7 @@ export default function TransactionsPage() {
 
             <Select
               label="Ví"
-              className="max-w-xs"
+              className="flex-1 min-w-[150px]"
               selectedKeys={
                 filters.wallet_id ? [String(filters.wallet_id)] : []
               }
@@ -215,6 +215,7 @@ export default function TransactionsPage() {
 
             <Button
               variant="flat"
+              className="shrink-0 h-12"
               onPress={() => {
                 setFilters({});
                 refetch();

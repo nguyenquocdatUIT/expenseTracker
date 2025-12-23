@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useLoginV1AuthLoginPost } from "@/lib/api";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const signinSchema = z.object({
   email: z.string().email("Email không hợp lệ"),
@@ -21,6 +22,7 @@ type SigninFormData = z.infer<typeof signinSchema>;
 export default function SigninPage() {
   const router = useRouter();
   const [error, setError] = useState("");
+  const { login: authLogin } = useAuth();
 
   const { mutate: login, isPending } = useLoginV1AuthLoginPost();
 
@@ -39,10 +41,9 @@ export default function SigninPage() {
       { data },
       {
         onSuccess: (response) => {
-          // Lưu token vào localStorage
-          localStorage.setItem("access_token", response.access_token);
+          // Lưu token và update auth context
+          authLogin(response.access_token);
           console.log("Đăng nhập thành công:", response.user);
-          router.push("/dashboard");
         },
         onError: (err: any) => {
           console.error("Lỗi đăng nhập:", err);

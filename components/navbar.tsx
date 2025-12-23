@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -16,8 +18,10 @@ import clsx from "clsx";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { ExpenseTrackerLogo } from "@/components/logo";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Navbar = () => {
+  const { isAuthenticated } = useAuth();
   return (
     <HeroUINavbar
       maxWidth="xl"
@@ -61,15 +65,15 @@ export const Navbar = () => {
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          <NextLink href="/auth/signin">
-            <Button
-              className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
-            >
-              Đăng nhập
-            </Button>
-          </NextLink>
-        </NavbarItem>
+        {!isAuthenticated && (
+          <NavbarItem className="hidden md:flex">
+            <NextLink href="/auth/signin">
+              <Button className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all">
+                Đăng nhập
+              </Button>
+            </NextLink>
+          </NavbarItem>
+        )}
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">

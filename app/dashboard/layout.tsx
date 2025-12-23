@@ -12,6 +12,7 @@ import {
 } from "@heroui/dropdown";
 import { Divider } from "@heroui/divider";
 import { ExpenseTrackerLogo } from "@/components/logo";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: "📊" },
@@ -29,6 +30,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { logout } = useAuth();
 
   // TODO: Kết nối API thật sau
   const dummyUser = {
@@ -37,8 +39,7 @@ export default function DashboardLayout({
   };
 
   const handleSignOut = () => {
-    // TODO: Kết nối API thật sau
-    window.location.href = "/auth/signin";
+    logout();
   };
 
   return (
@@ -47,10 +48,10 @@ export default function DashboardLayout({
       <aside className="hidden w-64 border-r border-divider bg-background md:block flex-shrink-0">
         <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="flex h-16 items-center px-6">
+          <Link href="/" className="flex h-16 items-center px-6">
             <ExpenseTrackerLogo />
             {/* <h1 className="text-xl font-bold text-primary">Expense Tracker</h1> */}
-          </div>
+          </Link>
 
           <Divider />
 
@@ -120,7 +121,9 @@ export default function DashboardLayout({
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Mobile Header */}
         <header className="flex h-16 items-center justify-between border-b border-divider bg-background px-4 md:hidden">
-          <ExpenseTrackerLogo />
+          <Link href="/">
+            <ExpenseTrackerLogo />
+          </Link>
 
           <Dropdown>
             <DropdownTrigger>
