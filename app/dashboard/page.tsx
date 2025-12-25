@@ -29,6 +29,7 @@ import {
   startOfDay,
   endOfDay,
 } from "date-fns";
+
 import {
   useGetSpendingByCategoryV1AnalyticsSpendingByCategoryGet,
   useGetSpendingTrendV1AnalyticsSpendingTrendGet,
@@ -83,15 +84,17 @@ export default function DashboardPage() {
   // compute date range for API calls based on `period`
   const getDateRange = () => {
     const now = new Date();
+
     if (period === "month") {
       return {
         date_from: format(
           startOfDay(startOfMonth(now)),
-          "yyyy-MM-dd'T'HH:mm:ss"
+          "yyyy-MM-dd'T'HH:mm:ss",
         ),
         date_to: format(endOfDay(endOfMonth(now)), "yyyy-MM-dd'T'HH:mm:ss"),
       };
     }
+
     return {
       date_from: format(startOfDay(startOfYear(now)), "yyyy-MM-dd'T'HH:mm:ss"),
       date_to: format(endOfDay(endOfYear(now)), "yyyy-MM-dd'T'HH:mm:ss"),
@@ -110,7 +113,7 @@ export default function DashboardPage() {
   console.log("spendingByCategory:", spendingByCategory);
   const trendFrom = format(
     startOfDay(subMonths(new Date(), 5)),
-    "yyyy-MM-dd'T'HH:mm:ss"
+    "yyyy-MM-dd'T'HH:mm:ss",
   );
   const trendTo = format(endOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss");
   const { data: spendingTrend } =
@@ -129,7 +132,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setLoading(
-      !spendingByCategory || !spendingTrend || !topCategories || !wallets
+      !spendingByCategory || !spendingTrend || !topCategories || !wallets,
     );
     if (spendingByCategory && spendingTrend && topCategories && wallets) {
       // Map API responses to AnalyticsData
@@ -138,15 +141,15 @@ export default function DashboardPage() {
         income: 0,
         expense: (spendingByCategory || []).reduce(
           (s: number, c: any) => s + (c.amount || 0),
-          0
+          0,
         ),
         balance: (wallets || []).reduce(
           (s: number, w: any) => s + (w.balance || 0),
-          0
+          0,
         ),
         totalBalance: (wallets || []).reduce(
           (s: number, w: any) => s + (w.balance || 0),
-          0
+          0,
         ),
       };
 
@@ -178,8 +181,9 @@ export default function DashboardPage() {
 
       const totalBalance = mappedWallets.reduce(
         (s: number, w: any) => s + (w.balance || 0),
-        0
+        0,
       );
+
       summary.balance = totalBalance;
       summary.totalBalance = totalBalance;
 
@@ -221,31 +225,31 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-gray-500">Tổng quan tài chính của bạn</p>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">Tổng quan tài chính</h1>
+          <p className="text-gray-500">Theo dõi thu nhập, chi tiêu và số dư của bạn bên dưới</p>
         </div>
         <div className="flex gap-2">
           <Button
-            size="sm"
-            variant={period === "month" ? "solid" : "flat"}
-            onClick={() => setPeriod("month")}
             className={
               period === "month"
                 ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
                 : "text-sky-600 hover:bg-sky-50"
             }
+            size="sm"
+            variant={period === "month" ? "solid" : "flat"}
+            onClick={() => setPeriod("month")}
           >
             Tháng này
           </Button>
           <Button
-            size="sm"
-            variant={period === "year" ? "solid" : "flat"}
-            onClick={() => setPeriod("year")}
             className={
               period === "year"
                 ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
                 : "text-sky-600 hover:bg-sky-50"
             }
+            size="sm"
+            variant={period === "year" ? "solid" : "flat"}
+            onClick={() => setPeriod("year")}
           >
             Năm này
           </Button>
@@ -330,16 +334,16 @@ export default function DashboardPage() {
           </CardHeader>
           <CardBody>
             {analytics.expensesByCategory.length > 0 ? (
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer height={300} width="100%">
                 <PieChart>
                   <Pie
+                    label
+                    cx="50%"
+                    cy="50%"
                     data={analytics.expensesByCategory}
                     dataKey="amount"
                     nameKey="category"
-                    cx="50%"
-                    cy="50%"
                     outerRadius={100}
-                    label
                   >
                     {analytics.expensesByCategory.map((entry, index) => (
                       <Cell
@@ -368,7 +372,7 @@ export default function DashboardPage() {
             <h3 className="text-lg font-semibold">Xu hướng 6 tháng</h3>
           </CardHeader>
           <CardBody>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer height={300} width="100%">
               <LineChart
                 data={analytics.monthlyTrend}
                 margin={{ left: 20, right: 10, top: 10, bottom: 10 }}
@@ -379,16 +383,16 @@ export default function DashboardPage() {
                 <Tooltip formatter={(value: number) => formatCurrency(value)} />
                 <Legend />
                 <Line
-                  type="monotone"
                   dataKey="income"
-                  stroke="#0ea5e9"
                   name="Thu nhập"
+                  stroke="#0ea5e9"
+                  type="monotone"
                 />
                 <Line
-                  type="monotone"
                   dataKey="expense"
-                  stroke="#F31260"
                   name="Chi tiêu"
+                  stroke="#F31260"
+                  type="monotone"
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -403,9 +407,9 @@ export default function DashboardPage() {
             <h3 className="text-lg font-semibold">Top chi tiêu</h3>
             <Link href="/dashboard/analytics">
               <Button
+                className="text-white hover:bg-white/10"
                 size="sm"
                 variant="light"
-                className="text-white hover:bg-white/10"
               >
                 Xem chi tiết →
               </Button>
@@ -417,8 +421,6 @@ export default function DashboardPage() {
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Chip
-                      size="sm"
-                      variant="flat"
                       color={
                         index === 0
                           ? "danger"
@@ -426,6 +428,8 @@ export default function DashboardPage() {
                             ? "warning"
                             : "default"
                       }
+                      size="sm"
+                      variant="flat"
                     >
                       #{index + 1}
                     </Chip>
@@ -450,9 +454,9 @@ export default function DashboardPage() {
             <h3 className="text-lg font-semibold">Ví của bạn</h3>
             <Link href="/dashboard/wallets">
               <Button
+                className="text-white hover:bg-white/10"
                 size="sm"
                 variant="light"
-                className="text-white hover:bg-white/10"
               >
                 Quản lý →
               </Button>

@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
+
 import {
   useGetTransactionsV1TransactionsGet,
   useCreateTransactionV1TransactionsPost,
@@ -70,6 +71,7 @@ export default function TransactionsPage() {
   });
 
   const { data: categories } = useGetCategoriesV1CategoriesGet();
+
   console.log("categories:", categories);
   const { data: wallets } = useGetWalletsV1WalletsGet();
 
@@ -111,7 +113,7 @@ export default function TransactionsPage() {
         onError: (error) => {
           console.error("Error creating transaction:", error);
         },
-      }
+      },
     );
   });
 
@@ -123,7 +125,7 @@ export default function TransactionsPage() {
           onSuccess: () => {
             refetch();
           },
-        }
+        },
       );
     }
   };
@@ -146,11 +148,11 @@ export default function TransactionsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Giao dịch</h1>
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">Giao dịch</h1>
         <Button
-          onPress={handleAddNew}
           className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
-          startContent={<span>➕</span>}
+// xoá icon và color text
+          onPress={handleAddNew}
         >
           Thêm giao dịch
         </Button>
@@ -160,8 +162,8 @@ export default function TransactionsPage() {
         <CardHeader>
           <div className="flex flex-row gap-2 flex-wrap items-end w-full">
             <Select
-              label="Loại"
               className="flex-1 min-w-[150px]"
+              label="Loại"
               selectedKeys={
                 filters.transaction_type ? [filters.transaction_type] : []
               }
@@ -178,8 +180,8 @@ export default function TransactionsPage() {
             </Select>
 
             <Select
-              label="Danh mục"
               className="flex-1 min-w-[150px]"
+              label="Danh mục"
               selectedKeys={
                 filters.category_id ? [String(filters.category_id)] : []
               }
@@ -196,8 +198,8 @@ export default function TransactionsPage() {
             </Select>
 
             <Select
-              label="Ví"
               className="flex-1 min-w-[150px]"
+              label="Ví"
               selectedKeys={
                 filters.wallet_id ? [String(filters.wallet_id)] : []
               }
@@ -214,8 +216,8 @@ export default function TransactionsPage() {
             </Select>
 
             <Button
-              variant="flat"
               className="shrink-0 h-12"
+              variant="flat"
               onPress={() => {
                 setFilters({});
                 refetch();
@@ -281,8 +283,8 @@ export default function TransactionsPage() {
                     <TableCell>{transaction.description || "—"}</TableCell>
                     <TableCell>
                       <Button
-                        size="sm"
                         color="danger"
+                        size="sm"
                         variant="light"
                         onPress={() => handleDelete(transaction.id)}
                       >
@@ -299,8 +301,8 @@ export default function TransactionsPage() {
             <div className="flex justify-center mt-4">
               <div className="flex gap-2">
                 <Button
-                  size="sm"
                   isDisabled={page === 1}
+                  size="sm"
                   onPress={() => setPage(page - 1)}
                 >
                   Trước
@@ -309,8 +311,8 @@ export default function TransactionsPage() {
                   Trang {page} / {transactionsData.pages}
                 </span>
                 <Button
-                  size="sm"
                   isDisabled={page === transactionsData.pages}
+                  size="sm"
                   onPress={() => setPage(page + 1)}
                 >
                   Sau
@@ -321,7 +323,7 @@ export default function TransactionsPage() {
         </CardBody>
       </Card>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+      <Modal isOpen={isOpen} size="2xl" onClose={onClose}>
         <ModalContent>
           <form onSubmit={onSubmit}>
             <ModalHeader className="flex flex-col gap-1 bg-gradient-to-r from-sky-500 to-blue-600 text-white">
@@ -330,13 +332,13 @@ export default function TransactionsPage() {
             <ModalBody className="py-6">
               <div className="space-y-4">
                 <Select
+                  errorMessage={errors.type?.message}
+                  isInvalid={!!errors.type}
                   label="Loại giao dịch"
                   selectedKeys={[transactionType]}
                   onChange={(e) =>
                     setValue("type", e.target.value as TransactionType)
                   }
-                  isInvalid={!!errors.type}
-                  errorMessage={errors.type?.message}
                 >
                   <SelectItem key="INCOME">Thu nhập</SelectItem>
                   <SelectItem key="EXPENSE">Chi tiêu</SelectItem>
@@ -347,20 +349,22 @@ export default function TransactionsPage() {
                   label="Số tiền"
                   type="number"
                   {...register("amount", { valueAsNumber: true })}
-                  placeholder="0"
-                  isInvalid={!!errors.amount}
                   errorMessage={errors.amount?.message}
+                  isInvalid={!!errors.amount}
+                  placeholder="0"
                 />
 
                 <Input
                   label="Ngày giờ"
                   type="datetime-local"
                   {...register("date")}
-                  isInvalid={!!errors.date}
                   errorMessage={errors.date?.message}
+                  isInvalid={!!errors.date}
                 />
 
                 <Select
+                  errorMessage={errors.category_id?.message}
+                  isInvalid={!!errors.category_id}
                   label="Danh mục"
                   selectedKeys={
                     watch("category_id") ? [String(watch("category_id"))] : []
@@ -371,8 +375,6 @@ export default function TransactionsPage() {
                       shouldValidate: true,
                     });
                   }}
-                  isInvalid={!!errors.category_id}
-                  errorMessage={errors.category_id?.message}
                 >
                   {(categories || []).map((cat) => (
                     <SelectItem key={String(cat.id)}>{cat.name}</SelectItem>
@@ -380,6 +382,8 @@ export default function TransactionsPage() {
                 </Select>
 
                 <Select
+                  errorMessage={errors.wallet_id?.message}
+                  isInvalid={!!errors.wallet_id}
                   label="Ví"
                   selectedKeys={
                     watch("wallet_id") ? [String(watch("wallet_id"))] : []
@@ -390,8 +394,6 @@ export default function TransactionsPage() {
                       shouldValidate: true,
                     });
                   }}
-                  isInvalid={!!errors.wallet_id}
-                  errorMessage={errors.wallet_id?.message}
                 >
                   {(wallets || []).map((wallet) => (
                     <SelectItem key={String(wallet.id)}>
@@ -402,6 +404,8 @@ export default function TransactionsPage() {
 
                 {transactionType === "TRANSFER" && (
                   <Select
+                    errorMessage={errors.to_wallet_id?.message}
+                    isInvalid={!!errors.to_wallet_id}
                     label="Ví đích"
                     selectedKeys={
                       watch("to_wallet_id")
@@ -414,8 +418,6 @@ export default function TransactionsPage() {
                         shouldValidate: true,
                       });
                     }}
-                    isInvalid={!!errors.to_wallet_id}
-                    errorMessage={errors.to_wallet_id?.message}
                   >
                     {(wallets || []).map((wallet) => (
                       <SelectItem key={String(wallet.id)}>
@@ -437,9 +439,9 @@ export default function TransactionsPage() {
                 Hủy
               </Button>
               <Button
-                type="submit"
-                isLoading={isCreating}
                 className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
+                isLoading={isCreating}
+                type="submit"
               >
                 Thêm
               </Button>

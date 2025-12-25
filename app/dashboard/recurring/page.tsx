@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Card, CardBody } from "@heroui/card";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
@@ -28,6 +28,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
+
 import {
   useGetRecurringTransactionsV1RecurringTransactionsGet,
   useCreateRecurringTransactionV1RecurringTransactionsPost,
@@ -113,6 +114,7 @@ export default function RecurringTransactionsPage() {
 
   const pushToast = (type: "success" | "error", message: string) => {
     const id = Date.now() + Math.floor(Math.random() * 1000);
+
     setToasts((t) => [...t, { id, type, message }]);
     setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3500);
   };
@@ -152,7 +154,7 @@ export default function RecurringTransactionsPage() {
               pushToast("error", "Cập nhật thất bại");
               setIsSaving(false);
             },
-          }
+          },
         );
       } else {
         createRecurring(
@@ -170,7 +172,7 @@ export default function RecurringTransactionsPage() {
               pushToast("error", "Tạo thất bại");
               setIsSaving(false);
             },
-          }
+          },
         );
       }
     } catch (error) {
@@ -212,7 +214,7 @@ export default function RecurringTransactionsPage() {
           console.error("Delete recurring error:", err);
           pushToast("error", "Xóa thất bại");
         },
-      }
+      },
     );
   };
 
@@ -241,6 +243,7 @@ export default function RecurringTransactionsPage() {
       MONTHLY: "Hàng tháng",
       YEARLY: "Hàng năm",
     };
+
     return labels[freq] || freq;
   };
 
@@ -284,8 +287,8 @@ export default function RecurringTransactionsPage() {
         </div>
         <Button
           color="primary"
-          onPress={handleAddNew}
           startContent={<span>➕</span>}
+          onPress={handleAddNew}
         >
           Tạo giao dịch định kỳ
         </Button>
@@ -294,15 +297,15 @@ export default function RecurringTransactionsPage() {
       {/* Filters */}
       <div className="flex gap-2">
         <Button
-          variant={filter === "active" ? "solid" : "flat"}
           color="primary"
+          variant={filter === "active" ? "solid" : "flat"}
           onPress={() => setFilter("active")}
         >
           Đang hoạt động
         </Button>
         <Button
-          variant={filter === "all" ? "solid" : "flat"}
           color="primary"
+          variant={filter === "all" ? "solid" : "flat"}
           onPress={() => setFilter("all")}
         >
           Tất cả
@@ -321,7 +324,7 @@ export default function RecurringTransactionsPage() {
               <p className="text-lg text-default-400">
                 Chưa có giao dịch định kỳ nào
               </p>
-              <Button color="primary" onPress={handleAddNew} className="mt-4">
+              <Button className="mt-4" color="primary" onPress={handleAddNew}>
                 Tạo giao dịch định kỳ đầu tiên
               </Button>
             </div>
@@ -342,8 +345,8 @@ export default function RecurringTransactionsPage() {
                     <TableCell>
                       <Chip
                         color={getTypeColor(item.type)}
-                        variant="flat"
                         size="sm"
+                        variant="flat"
                       >
                         {getTypeLabel(item.type)}
                       </Chip>
@@ -372,17 +375,18 @@ export default function RecurringTransactionsPage() {
                     <TableCell>
                       {(() => {
                         const nd = item.next_date ?? item.nextDate;
+
                         return nd ? format(new Date(nd), "dd/MM/yyyy") : "-";
                       })()}
                     </TableCell>
                     <TableCell>
                       <Chip
-                        size="sm"
                         color={
                           (item.is_active ?? item.isActive)
                             ? "success"
                             : "default"
                         }
+                        size="sm"
                         variant="flat"
                       >
                         {(item.is_active ?? item.isActive)
@@ -393,17 +397,17 @@ export default function RecurringTransactionsPage() {
                     <TableCell>
                       <div className="flex gap-2">
                         <Button
+                          color="primary"
                           size="sm"
                           variant="light"
-                          color="primary"
                           onPress={() => handleEdit(item)}
                         >
                           Sửa
                         </Button>
                         <Button
+                          color="danger"
                           size="sm"
                           variant="light"
-                          color="danger"
                           onPress={() => handleDelete(item.id)}
                         >
                           Xóa
@@ -419,7 +423,7 @@ export default function RecurringTransactionsPage() {
       </Card>
 
       {/* Add/Edit Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+      <Modal isOpen={isOpen} size="2xl" onClose={onClose}>
         <ModalContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <ModalHeader>
@@ -434,6 +438,8 @@ export default function RecurringTransactionsPage() {
                 <input type="hidden" {...register("type")} />
                 <input type="hidden" {...register("frequency")} />
                 <Select
+                  errorMessage={errors.type?.message}
+                  isInvalid={!!errors.type}
                   label="Loại giao dịch"
                   selectedKeys={watch("type") ? [String(watch("type"))] : []}
                   onChange={(e) =>
@@ -442,8 +448,6 @@ export default function RecurringTransactionsPage() {
                       shouldDirty: true,
                     })
                   }
-                  isInvalid={!!errors.type}
-                  errorMessage={errors.type?.message}
                 >
                   <SelectItem key="INCOME">Thu nhập</SelectItem>
                   <SelectItem key="EXPENSE">Chi tiêu</SelectItem>
@@ -454,11 +458,13 @@ export default function RecurringTransactionsPage() {
                   label="Số tiền"
                   type="number"
                   {...register("amount", { valueAsNumber: true })}
-                  isInvalid={!!errors.amount}
                   errorMessage={errors.amount?.message}
+                  isInvalid={!!errors.amount}
                 />
 
                 <Select
+                  errorMessage={errors.frequency?.message}
+                  isInvalid={!!errors.frequency}
                   label="Tần suất"
                   selectedKeys={
                     watch("frequency") ? [String(watch("frequency"))] : []
@@ -469,8 +475,6 @@ export default function RecurringTransactionsPage() {
                       shouldDirty: true,
                     })
                   }
-                  isInvalid={!!errors.frequency}
-                  errorMessage={errors.frequency?.message}
                 >
                   <SelectItem key="DAILY">Hàng ngày</SelectItem>
                   <SelectItem key="WEEKLY">Hàng tuần</SelectItem>
@@ -479,6 +483,8 @@ export default function RecurringTransactionsPage() {
                 </Select>
 
                 <Select
+                  errorMessage={errors.categoryId?.message}
+                  isInvalid={!!errors.categoryId}
                   label="Danh mục"
                   selectedKeys={
                     watch("categoryId") ? [String(watch("categoryId"))] : []
@@ -489,8 +495,6 @@ export default function RecurringTransactionsPage() {
                       shouldDirty: true,
                     })
                   }
-                  isInvalid={!!errors.categoryId}
-                  errorMessage={errors.categoryId?.message}
                 >
                   {filteredCategories.map((cat: any) => (
                     <SelectItem key={String(cat.id)}>
@@ -500,6 +504,8 @@ export default function RecurringTransactionsPage() {
                 </Select>
 
                 <Select
+                  errorMessage={errors.walletId?.message}
+                  isInvalid={!!errors.walletId}
                   label="Ví"
                   selectedKeys={
                     watch("walletId") ? [String(watch("walletId"))] : []
@@ -510,8 +516,6 @@ export default function RecurringTransactionsPage() {
                       shouldDirty: true,
                     })
                   }
-                  isInvalid={!!errors.walletId}
-                  errorMessage={errors.walletId?.message}
                 >
                   {displayWallets.map((wallet: any) => (
                     <SelectItem key={String(wallet.id)}>
@@ -525,8 +529,8 @@ export default function RecurringTransactionsPage() {
                     label="Ngày bắt đầu"
                     type="date"
                     {...register("startDate")}
-                    isInvalid={!!errors.startDate}
                     errorMessage={errors.startDate?.message}
+                    isInvalid={!!errors.startDate}
                   />
 
                   <Input

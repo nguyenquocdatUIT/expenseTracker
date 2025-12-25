@@ -17,6 +17,7 @@ import { Spinner } from "@heroui/spinner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+
 import {
   useGetWalletsV1WalletsGet,
   useCreateWalletV1WalletsPost,
@@ -84,7 +85,7 @@ export default function WalletsPage() {
           onError: (error) => {
             console.error("Error updating wallet:", error);
           },
-        }
+        },
       );
     } else {
       // Create new wallet
@@ -99,7 +100,7 @@ export default function WalletsPage() {
           onError: (error) => {
             console.error("Error creating wallet:", error);
           },
-        }
+        },
       );
     }
   });
@@ -134,7 +135,7 @@ export default function WalletsPage() {
           onError: (error) => {
             console.error("Error deleting wallet:", error);
           },
-        }
+        },
       );
     }
   };
@@ -166,8 +167,8 @@ export default function WalletsPage() {
         </div>
         <Button
           className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
+// xoá icon
           onPress={handleAddNew}
-          startContent={<span>➕</span>}
         >
           Thêm ví
         </Button>
@@ -175,7 +176,7 @@ export default function WalletsPage() {
 
       {isLoading ? (
         <div className="flex justify-center py-8">
-          <Spinner size="lg" color="primary" />
+          <Spinner color="primary" size="lg" />
         </div>
       ) : !wallets || wallets.length === 0 ? (
         <Card className="shadow-lg border border-gray-200 dark:border-gray-800">
@@ -202,9 +203,9 @@ export default function WalletsPage() {
                     {wallet.name}
                   </h3>
                   <Chip
+                    className="mt-1 bg-sky-100 text-sky-700"
                     size="sm"
                     variant="flat"
-                    className="mt-1 bg-sky-100 text-sky-700"
                   >
                     {wallet.currency}
                   </Chip>
@@ -216,17 +217,17 @@ export default function WalletsPage() {
                 </div>
                 <div className="flex gap-2 mt-4">
                   <Button
+                    className="border border-sky-500 text-sky-600 hover:bg-sky-50"
                     size="sm"
                     variant="flat"
-                    className="border border-sky-500 text-sky-600 hover:bg-sky-50"
                     onPress={() => handleEdit(wallet)}
                   >
                     Sửa
                   </Button>
                   <Button
+                    className="border border-red-500 text-red-600 hover:bg-red-50"
                     size="sm"
                     variant="flat"
-                    className="border border-red-500 text-red-600 hover:bg-red-50"
                     onPress={() => handleDelete(wallet.id)}
                   >
                     Xóa
@@ -249,27 +250,27 @@ export default function WalletsPage() {
                 <Input
                   label="Tên ví"
                   {...register("name")}
-                  placeholder="VD: Ví tiền mặt"
-                  isInvalid={!!errors.name}
-                  errorMessage={errors.name?.message}
                   classNames={{
                     input: "bg-white dark:bg-gray-900",
                     inputWrapper:
                       "border-gray-200 dark:border-gray-700 hover:border-sky-400",
                   }}
+                  errorMessage={errors.name?.message}
+                  isInvalid={!!errors.name}
+                  placeholder="VD: Ví tiền mặt"
                 />
 
                 <Input
                   label="Tiền tệ"
                   {...register("currency")}
-                  placeholder="VND"
-                  isInvalid={!!errors.currency}
-                  errorMessage={errors.currency?.message}
                   classNames={{
                     input: "bg-white dark:bg-gray-900",
                     inputWrapper:
                       "border-gray-200 dark:border-gray-700 hover:border-sky-400",
                   }}
+                  errorMessage={errors.currency?.message}
+                  isInvalid={!!errors.currency}
+                  placeholder="VND"
                 />
 
                 {!editingWallet && (
@@ -277,14 +278,14 @@ export default function WalletsPage() {
                     label="Số dư ban đầu"
                     type="number"
                     {...register("initial_balance", { valueAsNumber: true })}
-                    placeholder="0"
-                    isInvalid={!!errors.initial_balance}
-                    errorMessage={errors.initial_balance?.message}
                     classNames={{
                       input: "bg-white dark:bg-gray-900",
                       inputWrapper:
                         "border-gray-200 dark:border-gray-700 hover:border-sky-400",
                     }}
+                    errorMessage={errors.initial_balance?.message}
+                    isInvalid={!!errors.initial_balance}
+                    placeholder="0"
                   />
                 )}
               </div>
@@ -294,9 +295,9 @@ export default function WalletsPage() {
                 Hủy
               </Button>
               <Button
-                type="submit"
                 className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
                 isLoading={isCreating || isUpdating}
+                type="submit"
               >
                 {editingWallet ? "Cập nhật" : "Thêm"}
               </Button>

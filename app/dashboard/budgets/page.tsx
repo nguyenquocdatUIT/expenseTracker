@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format, addMonths } from "date-fns";
+
 import {
   useGetBudgetsV1BudgetsGet,
   useCreateBudgetV1BudgetsPost,
@@ -105,6 +106,7 @@ export default function BudgetsPage() {
 
   const pushToast = (type: "success" | "error", message: string) => {
     const id = Date.now() + Math.floor(Math.random() * 1000);
+
     setToasts((t) => [...t, { id, type, message }]);
     setTimeout(() => {
       setToasts((t) => t.filter((x) => x.id !== id));
@@ -140,7 +142,7 @@ export default function BudgetsPage() {
               pushToast("error", "Cập nhật ngân sách thất bại");
               setIsSaving(false);
             },
-          }
+          },
         );
       } else {
         createBudget(
@@ -158,7 +160,7 @@ export default function BudgetsPage() {
               pushToast("error", "Tạo ngân sách thất bại");
               setIsSaving(false);
             },
-          }
+          },
         );
       }
     } catch (error) {
@@ -196,13 +198,14 @@ export default function BudgetsPage() {
           refetchBudgets();
         },
         onError: (err) => console.error("Delete budget error:", err),
-      }
+      },
     );
   };
 
   const handleAddNew = () => {
     setEditingBudget(null);
     const now = new Date();
+
     reset({
       period: "MONTHLY",
       startDate: format(now, "yyyy-MM-dd"),
@@ -225,6 +228,7 @@ export default function BudgetsPage() {
     if (isOverBudget) return "danger";
     if (progress >= 80) return "warning";
     if (progress >= 50) return "primary";
+
     return "success";
   };
 
@@ -237,6 +241,7 @@ export default function BudgetsPage() {
       YEARLY: "Hàng năm",
       CUSTOM: "Tùy chỉnh",
     };
+
     return labels[period] || period;
   };
 
@@ -258,13 +263,13 @@ export default function BudgetsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Quản lý Ngân sách</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">Quản lý Ngân sách</h1> 
           <p className="text-gray-500">Theo dõi và kiểm soát chi tiêu</p>
         </div>
         <Button
-          onPress={handleAddNew}
           className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
-          startContent={<span>➕</span>}
+// xoá icon và đổi color text
+          onPress={handleAddNew}
         >
           Tạo ngân sách
         </Button>
@@ -273,24 +278,24 @@ export default function BudgetsPage() {
       {/* Filters */}
       <div className="flex gap-2">
         <Button
-          variant={filter === "active" ? "solid" : "flat"}
-          onPress={() => setFilter("active")}
           className={
             filter === "active"
               ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
               : "text-sky-600 hover:bg-sky-50"
           }
+          variant={filter === "active" ? "solid" : "flat"}
+          onPress={() => setFilter("active")}
         >
           Đang hoạt động
         </Button>
         <Button
-          variant={filter === "all" ? "solid" : "flat"}
-          onPress={() => setFilter("all")}
           className={
             filter === "all"
               ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
               : "text-sky-600 hover:bg-sky-50"
           }
+          variant={filter === "all" ? "solid" : "flat"}
+          onPress={() => setFilter("all")}
         >
           Tất cả
         </Button>
@@ -306,8 +311,8 @@ export default function BudgetsPage() {
           <CardBody className="text-center py-12">
             <p className="text-lg text-gray-400">Chưa có ngân sách nào</p>
             <Button
-              onPress={handleAddNew}
               className="mt-4 bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
+              onPress={handleAddNew}
             >
               Tạo ngân sách đầu tiên
             </Button>
@@ -330,9 +335,9 @@ export default function BudgetsPage() {
                       {budget.category?.icon} {budget.category?.name}
                     </Chip>
                     <Chip
+                      className="bg-sky-100 text-sky-700"
                       size="sm"
                       variant="flat"
-                      className="bg-sky-100 text-sky-700"
                     >
                       {getPeriodLabel(budget.period_type)}
                     </Chip>
@@ -356,13 +361,13 @@ export default function BudgetsPage() {
                       </span>
                     </div>
                     <Progress
-                      value={Math.min(budget.usage_percentage || 0, 100)}
+                      showValueLabel
                       color={getProgressColor(
                         budget.usage_percentage || 0,
-                        budget.is_exceeded
+                        budget.is_exceeded,
                       )}
                       size="lg"
-                      showValueLabel
+                      value={Math.min(budget.usage_percentage || 0, 100)}
                     />
                   </div>
 
@@ -387,19 +392,19 @@ export default function BudgetsPage() {
                   {/* Actions */}
                   <div className="flex gap-2 pt-2">
                     <Button
+                      className="flex-1 bg-sky-100 text-sky-700 hover:bg-sky-200"
                       size="sm"
                       variant="flat"
                       onPress={() => handleEdit(budget)}
-                      className="flex-1 bg-sky-100 text-sky-700 hover:bg-sky-200"
                     >
                       Sửa
                     </Button>
                     <Button
+                      className="flex-1"
+                      color="danger"
                       size="sm"
                       variant="flat"
-                      color="danger"
                       onPress={() => handleDelete(budget.id)}
-                      className="flex-1"
                     >
                       Xóa
                     </Button>
@@ -412,7 +417,7 @@ export default function BudgetsPage() {
       )}
 
       {/* Add/Edit Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+      <Modal isOpen={isOpen} size="2xl" onClose={onClose}>
         <ModalContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <ModalHeader>
@@ -425,25 +430,25 @@ export default function BudgetsPage() {
                 <Input
                   label="Tên ngân sách"
                   {...register("name")}
-                  placeholder="VD: Ngân sách ăn uống tháng 11"
-                  isInvalid={!!errors.name}
                   errorMessage={errors.name?.message}
+                  isInvalid={!!errors.name}
+                  placeholder="VD: Ngân sách ăn uống tháng 11"
                 />
 
                 <Input
                   label="Số tiền"
                   type="number"
                   {...register("amount", { valueAsNumber: true })}
-                  isInvalid={!!errors.amount}
                   errorMessage={errors.amount?.message}
+                  isInvalid={!!errors.amount}
                 />
 
                 <Select
+                  errorMessage={errors.period?.message}
+                  isInvalid={!!errors.period}
                   label="Chu kỳ"
                   selectedKeys={watch("period") ? [watch("period")] : []}
                   onChange={(e) => setValue("period", e.target.value as any)}
-                  isInvalid={!!errors.period}
-                  errorMessage={errors.period?.message}
                 >
                   <SelectItem key="WEEKLY">Hàng tuần</SelectItem>
                   <SelectItem key="MONTHLY">Hàng tháng</SelectItem>
@@ -451,12 +456,16 @@ export default function BudgetsPage() {
                 </Select>
 
                 <Select
+                  errorMessage={errors.categoryId?.message}
+                  isDisabled={categoriesLoading}
+                  isInvalid={!!errors.categoryId}
                   label="Danh mục"
                   selectedKeys={
                     watch("categoryId") ? [watch("categoryId")] : []
                   }
                   onSelectionChange={(keys) => {
                     const selectedKey = Array.from(keys)[0];
+
                     if (selectedKey) {
                       setValue("categoryId", String(selectedKey), {
                         shouldValidate: true,
@@ -464,9 +473,6 @@ export default function BudgetsPage() {
                       });
                     }
                   }}
-                  isDisabled={categoriesLoading}
-                  isInvalid={!!errors.categoryId}
-                  errorMessage={errors.categoryId?.message}
                 >
                   {displayCategories.map((cat: any) => (
                     <SelectItem key={String(cat.id)}>
@@ -480,8 +486,8 @@ export default function BudgetsPage() {
                     label="Ngày bắt đầu"
                     type="date"
                     {...register("startDate")}
-                    isInvalid={!!errors.startDate}
                     errorMessage={errors.startDate?.message}
+                    isInvalid={!!errors.startDate}
                   />
 
                   <Input
@@ -496,8 +502,8 @@ export default function BudgetsPage() {
                   type="number"
                   {...register("alertAt", { valueAsNumber: true })}
                   description="Nhận cảnh báo khi chi tiêu đạt phần trăm này"
-                  isInvalid={!!errors.alertAt}
                   errorMessage={errors.alertAt?.message}
+                  isInvalid={!!errors.alertAt}
                 />
 
                 <div className="flex flex-col gap-3">
@@ -524,10 +530,10 @@ export default function BudgetsPage() {
                 Hủy
               </Button>
               <Button
-                type="submit"
                 className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
-                isLoading={isSaving}
                 disabled={isSaving}
+                isLoading={isSaving}
+                type="submit"
               >
                 {editingBudget ? "Cập nhật" : "Tạo"}
               </Button>

@@ -20,7 +20,7 @@ const profileSchema = z.object({
 const passwordSchema = z
   .object({
     currentPassword: z.string().min(1, "Mật khẩu hiện tại là bắt buộc"),
-    newPassword: z.string().min(6, "Mật khẩu mới phải có ít nhất 6 ký tự"),
+    newPassword: z.string().min(8, "Mật khẩu mới phải có ít nhất 8 ký tự"),
     confirmPassword: z.string().min(1, "Xác nhận mật khẩu là bắt buộc"),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
@@ -110,21 +110,21 @@ export default function ProfilePage() {
           <h2 className="text-xl font-semibold">Thông tin tài khoản</h2>
         </CardHeader>
         <CardBody>
-          <form onSubmit={handleSubmit(onSubmitProfile)} className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmitProfile)}>
             <Input
               label="Tên"
               {...register("name")}
-              isInvalid={!!errors.name}
               errorMessage={errors.name?.message}
+              isInvalid={!!errors.name}
             />
 
             <Input
               label="Email"
               type="email"
               {...register("email")}
-              isInvalid={!!errors.email}
-              errorMessage={errors.email?.message}
               isDisabled
+              errorMessage={errors.email?.message}
+              isInvalid={!!errors.email}
             />
 
             <Select
@@ -149,7 +149,7 @@ export default function ProfilePage() {
               </p>
             )}
 
-            <Button type="submit" color="primary">
+            <Button color="primary" type="submit">
               Cập nhật thông tin
             </Button>
           </form>
@@ -162,31 +162,31 @@ export default function ProfilePage() {
         </CardHeader>
         <CardBody>
           <form
-            onSubmit={handleSubmitPassword(onSubmitPassword)}
             className="space-y-4"
+            onSubmit={handleSubmitPassword(onSubmitPassword)}
           >
             <Input
               label="Mật khẩu hiện tại"
               type="password"
               {...registerPassword("currentPassword")}
-              isInvalid={!!passwordErrors.currentPassword}
               errorMessage={passwordErrors.currentPassword?.message}
+              isInvalid={!!passwordErrors.currentPassword}
             />
 
             <Input
               label="Mật khẩu mới"
               type="password"
               {...registerPassword("newPassword")}
-              isInvalid={!!passwordErrors.newPassword}
               errorMessage={passwordErrors.newPassword?.message}
+              isInvalid={!!passwordErrors.newPassword}
             />
 
             <Input
               label="Xác nhận mật khẩu mới"
               type="password"
               {...registerPassword("confirmPassword")}
-              isInvalid={!!passwordErrors.confirmPassword}
               errorMessage={passwordErrors.confirmPassword?.message}
+              isInvalid={!!passwordErrors.confirmPassword}
             />
 
             {passwordMessage && (
@@ -201,7 +201,7 @@ export default function ProfilePage() {
               </p>
             )}
 
-            <Button type="submit" color="primary">
+            <Button color="primary" type="submit">
               Đổi mật khẩu
             </Button>
           </form>

@@ -9,6 +9,7 @@ import { Link } from "@heroui/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+
 import { useRegisterV1AuthRegisterPost } from "@/lib/api";
 
 const registerSchema = z
@@ -29,8 +30,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const [error, setError] = useState("");
 
-  const { mutate: registerUser, isPending } =
-    useRegisterV1AuthRegisterPost();
+  const { mutate: registerUser, isPending } = useRegisterV1AuthRegisterPost();
 
   const {
     register,
@@ -60,10 +60,10 @@ export default function RegisterPage() {
         onError: (err: any) => {
           console.error("Lỗi đăng ký:", err);
           setError(
-            err?.response?.data?.detail || "Đã xảy ra lỗi. Vui lòng thử lại."
+            err?.response?.data?.detail || "Đã xảy ra lỗi. Vui lòng thử lại.",
           );
         },
-      }
+      },
     );
   };
 
@@ -76,8 +76,8 @@ export default function RegisterPage() {
         </CardHeader>
         <CardBody className="px-6 py-8">
           <form
-            onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
+            onSubmit={handleSubmit(onSubmit)}
           >
             {error && (
               <div className="rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-3 text-sm text-red-600 dark:text-red-400">
@@ -87,63 +87,63 @@ export default function RegisterPage() {
 
             <Input
               {...register("full_name")}
-              label="Họ và tên"
-              placeholder="Nguyễn Văn A"
-              isInvalid={!!errors.full_name}
-              errorMessage={errors.full_name?.message}
               classNames={{
                 input: "bg-white dark:bg-gray-900",
                 inputWrapper:
                   "border-gray-200 dark:border-gray-700 hover:border-sky-400",
               }}
+              errorMessage={errors.full_name?.message}
+              isInvalid={!!errors.full_name}
+              label="Họ và tên"
+              placeholder="Nguyễn Văn A"
             />
 
             <Input
               {...register("email")}
-              label="Email"
-              type="email"
-              placeholder="email@example.com"
-              isInvalid={!!errors.email}
-              errorMessage={errors.email?.message}
               classNames={{
                 input: "bg-white dark:bg-gray-900",
                 inputWrapper:
                   "border-gray-200 dark:border-gray-700 hover:border-sky-400",
               }}
+              errorMessage={errors.email?.message}
+              isInvalid={!!errors.email}
+              label="Email"
+              placeholder="email@example.com"
+              type="email"
             />
 
             <Input
               {...register("password")}
-              label="Mật khẩu"
-              type="password"
-              placeholder="Nhập mật khẩu"
-              isInvalid={!!errors.password}
-              errorMessage={errors.password?.message}
               classNames={{
                 input: "bg-white dark:bg-gray-900",
                 inputWrapper:
                   "border-gray-200 dark:border-gray-700 hover:border-sky-400",
               }}
+              errorMessage={errors.password?.message}
+              isInvalid={!!errors.password}
+              label="Mật khẩu"
+              placeholder="Nhập mật khẩu"
+              type="password"
             />
 
             <Input
               {...register("confirmPassword")}
-              label="Xác nhận mật khẩu"
-              type="password"
-              placeholder="Nhập lại mật khẩu"
-              isInvalid={!!errors.confirmPassword}
-              errorMessage={errors.confirmPassword?.message}
               classNames={{
                 input: "bg-white dark:bg-gray-900",
                 inputWrapper:
                   "border-gray-200 dark:border-gray-700 hover:border-sky-400",
               }}
+              errorMessage={errors.confirmPassword?.message}
+              isInvalid={!!errors.confirmPassword}
+              label="Xác nhận mật khẩu"
+              placeholder="Nhập lại mật khẩu"
+              type="password"
             />
 
             <Button
-              type="submit"
               className="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
               isLoading={isPending}
+              type="submit"
             >
               Đăng ký
             </Button>
@@ -153,9 +153,9 @@ export default function RegisterPage() {
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Đã có tài khoản?{" "}
             <Link
+              className="text-sky-600 hover:text-sky-700 font-semibold"
               href="/auth/signin"
               size="sm"
-              className="text-sky-600 hover:text-sky-700 font-semibold"
             >
               Đăng nhập
             </Link>

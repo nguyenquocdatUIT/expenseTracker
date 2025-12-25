@@ -1,6 +1,7 @@
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import Link from "next/link";
+
 import { ExpenseTrackerLogo } from "@/components/logo";
 
 export default function Home() {
@@ -61,17 +62,17 @@ export default function Home() {
       <div className="flex gap-4 mt-8">
         <Link href="/auth/register">
           <Button
-            size="lg"
             className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all px-8"
+            size="lg"
           >
             Bắt đầu miễn phí
           </Button>
         </Link>
         <Link href="/auth/signin">
           <Button
+            className="border-2 border-sky-500 text-sky-600 font-semibold hover:bg-sky-50 dark:hover:bg-sky-950 transition-all px-8"
             size="lg"
             variant="bordered"
-            className="border-2 border-sky-500 text-sky-600 font-semibold hover:bg-sky-50 dark:hover:bg-sky-950 transition-all px-8"
           >
             Đăng nhập
           </Button>

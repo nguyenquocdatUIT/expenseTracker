@@ -65,13 +65,14 @@ export default function ForgotPasswordPage() {
           </CardHeader>
           <CardBody className="px-6">
             <p className="mb-4 text-default-500">
-              Nếu email của bạn tồn tại trong hệ thống, chúng tôi đã gửi link đặt lại mật khẩu đến email của bạn.
+              Nếu email của bạn tồn tại trong hệ thống, chúng tôi đã gửi link
+              đặt lại mật khẩu đến email của bạn.
             </p>
             <p className="mb-6 text-sm text-default-400">
               Vui lòng kiểm tra hộp thư đến và spam.
             </p>
             <Link href="/auth/signin">
-              <Button color="primary" className="w-full">
+              <Button className="w-full" color="primary">
                 Quay lại đăng nhập
               </Button>
             </Link>
@@ -91,7 +92,10 @@ export default function ForgotPasswordPage() {
           </p>
         </CardHeader>
         <CardBody className="px-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             {error && (
               <div className="rounded-lg bg-danger-50 p-3 text-sm text-danger">
                 {error}
@@ -100,18 +104,18 @@ export default function ForgotPasswordPage() {
 
             <Input
               {...register("email")}
-              label="Email"
-              type="email"
-              placeholder="email@example.com"
-              isInvalid={!!errors.email}
               errorMessage={errors.email?.message}
+              isInvalid={!!errors.email}
+              label="Email"
+              placeholder="email@example.com"
+              type="email"
             />
 
             <Button
-              type="submit"
+              className="w-full"
               color="primary"
               isLoading={isLoading}
-              className="w-full"
+              type="submit"
             >
               Gửi link đặt lại mật khẩu
             </Button>

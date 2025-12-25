@@ -26,6 +26,7 @@ import { Spinner } from "@heroui/spinner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+
 import {
   useGetCategoriesV1CategoriesGet,
   useCreateCategoryV1CategoriesPost,
@@ -83,7 +84,7 @@ export default function CategoriesPage() {
         onError: (error) => {
           console.error("Error saving category:", error);
         },
-      }
+      },
     );
   };
 
@@ -108,8 +109,8 @@ export default function CategoriesPage() {
         </h1>
         <Button
           className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
+// xoá icon
           onPress={handleAddNew}
-          startContent={<span>➕</span>}
         >
           Thêm danh mục
         </Button>
@@ -210,12 +211,14 @@ export default function CategoriesPage() {
                 <Input
                   label="Tên danh mục"
                   {...register("name")}
-                  placeholder="VD: Ăn uống, Lương"
-                  isInvalid={!!errors.name}
                   errorMessage={errors.name?.message}
+                  isInvalid={!!errors.name}
+                  placeholder="VD: Ăn uống, Lương"
                 />
 
                 <Select
+                  errorMessage={errors.type?.message}
+                  isInvalid={!!errors.type}
                   label="Loại"
                   selectedKeys={watch("type") ? [watch("type")] : []}
                   onChange={(e) => {
@@ -225,8 +228,6 @@ export default function CategoriesPage() {
                       shouldDirty: true,
                     });
                   }}
-                  isInvalid={!!errors.type}
-                  errorMessage={errors.type?.message}
                 >
                   <SelectItem key="INCOME">Thu nhập</SelectItem>
                   <SelectItem key="EXPENSE">Chi tiêu</SelectItem>
@@ -249,7 +250,7 @@ export default function CategoriesPage() {
               <Button variant="light" onPress={onClose}>
                 Hủy
               </Button>
-              <Button color="primary" type="submit" isLoading={isCreating}>
+              <Button color="primary" isLoading={isCreating} type="submit">
                 Thêm
               </Button>
             </ModalFooter>
