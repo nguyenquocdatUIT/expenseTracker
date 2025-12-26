@@ -341,7 +341,7 @@ export default function DashboardPage() {
               <ResponsiveContainer height={300} width="100%">
                 <PieChart>
                   <Pie
-                    label={(entry) =>
+                    label={(entry: any) =>
                       `${entry.category}: ${formatCurrency(entry.amount)}`
                     }
                     cx="50%"
