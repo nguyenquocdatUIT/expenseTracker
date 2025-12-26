@@ -85,7 +85,7 @@ export default function WalletsPage() {
           onError: (error) => {
             console.error("Error updating wallet:", error);
           },
-        },
+        }
       );
     } else {
       // Create new wallet
@@ -100,7 +100,7 @@ export default function WalletsPage() {
           onError: (error) => {
             console.error("Error creating wallet:", error);
           },
-        },
+        }
       );
     }
   });
@@ -135,15 +135,15 @@ export default function WalletsPage() {
           onError: (error) => {
             console.error("Error deleting wallet:", error);
           },
-        },
+        }
       );
     }
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(amount);
   };
 
@@ -167,7 +167,7 @@ export default function WalletsPage() {
         </div>
         <Button
           className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
-// xoá icon
+          // xoá icon
           onPress={handleAddNew}
         >
           Thêm ví

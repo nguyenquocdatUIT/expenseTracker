@@ -154,7 +154,7 @@ export default function RecurringTransactionsPage() {
               pushToast("error", "Cập nhật thất bại");
               setIsSaving(false);
             },
-          },
+          }
         );
       } else {
         createRecurring(
@@ -172,7 +172,7 @@ export default function RecurringTransactionsPage() {
               pushToast("error", "Tạo thất bại");
               setIsSaving(false);
             },
-          },
+          }
         );
       }
     } catch (error) {
@@ -214,7 +214,7 @@ export default function RecurringTransactionsPage() {
           console.error("Delete recurring error:", err);
           pushToast("error", "Xóa thất bại");
         },
-      },
+      }
     );
   };
 
@@ -230,9 +230,9 @@ export default function RecurringTransactionsPage() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(amount);
   };
 

@@ -1,10 +1,14 @@
+"use client";
+
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import Link from "next/link";
 
 import { ExpenseTrackerLogo } from "@/components/logo";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
+  const { isAuthenticated } = useAuth();
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] gap-8">
       <div className="text-center space-y-4">
@@ -59,25 +63,40 @@ export default function Home() {
         </Card>
       </div>
 
-      <div className="flex gap-4 mt-8">
-        <Link href="/auth/register">
-          <Button
-            className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all px-8"
-            size="lg"
-          >
-            Bắt đầu miễn phí
-          </Button>
-        </Link>
-        <Link href="/auth/signin">
-          <Button
-            className="border-2 border-sky-500 text-sky-600 font-semibold hover:bg-sky-50 dark:hover:bg-sky-950 transition-all px-8"
-            size="lg"
-            variant="bordered"
-          >
-            Đăng nhập
-          </Button>
-        </Link>
-      </div>
+      {!isAuthenticated && (
+        <div className="flex gap-4 mt-8">
+          <Link href="/auth/register">
+            <Button
+              className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all px-8"
+              size="lg"
+            >
+              Bắt đầu miễn phí
+            </Button>
+          </Link>
+          <Link href="/auth/signin">
+            <Button
+              className="border-2 border-sky-500 text-sky-600 font-semibold hover:bg-sky-50 dark:hover:bg-sky-950 transition-all px-8"
+              size="lg"
+              variant="bordered"
+            >
+              Đăng nhập
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {isAuthenticated && (
+        <div className="flex gap-4 mt-8">
+          <Link href="/dashboard">
+            <Button
+              className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all px-8"
+              size="lg"
+            >
+              Vào Dashboard
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

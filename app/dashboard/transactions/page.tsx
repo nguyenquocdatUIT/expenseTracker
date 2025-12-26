@@ -23,7 +23,7 @@ import {
 } from "@heroui/table";
 import { Chip } from "@heroui/chip";
 import { Spinner } from "@heroui/spinner";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
@@ -75,6 +75,9 @@ export default function TransactionsPage() {
   console.log("categories:", categories);
   const { data: wallets } = useGetWalletsV1WalletsGet();
 
+  console.log("wallets:", wallets);
+  console.log("filters:", filters);
+
   // Mutations
   const { mutate: createTransaction, isPending: isCreating } =
     useCreateTransactionV1TransactionsPost();
@@ -88,6 +91,7 @@ export default function TransactionsPage() {
     reset,
     watch,
     setValue,
+    control,
   } = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
@@ -113,7 +117,7 @@ export default function TransactionsPage() {
         onError: (error) => {
           console.error("Error creating transaction:", error);
         },
-      },
+      }
     );
   });
 
@@ -125,15 +129,15 @@ export default function TransactionsPage() {
           onSuccess: () => {
             refetch();
           },
-        },
+        }
       );
     }
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(amount);
   };
 
@@ -148,10 +152,12 @@ export default function TransactionsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">Giao dịch</h1>
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+          Giao dịch
+        </h1>
         <Button
           className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
-// xoá icon và color text
+          // xoá icon và color text
           onPress={handleAddNew}
         >
           Thêm giao dịch
@@ -165,12 +171,15 @@ export default function TransactionsPage() {
               className="flex-1 min-w-[150px]"
               label="Loại"
               selectedKeys={
-                filters.transaction_type ? [filters.transaction_type] : []
+                filters.transaction_type
+                  ? new Set([filters.transaction_type])
+                  : new Set([])
               }
-              onChange={(e) => {
+              onSelectionChange={(keys) => {
+                const selectedKey = Array.from(keys)[0];
                 setFilters({
                   ...filters,
-                  transaction_type: e.target.value as TransactionType,
+                  transaction_type: selectedKey as TransactionType,
                 });
               }}
             >
@@ -183,17 +192,20 @@ export default function TransactionsPage() {
               className="flex-1 min-w-[150px]"
               label="Danh mục"
               selectedKeys={
-                filters.category_id ? [String(filters.category_id)] : []
+                filters.category_id
+                  ? new Set([String(filters.category_id)])
+                  : new Set([])
               }
-              onChange={(e) => {
+              onSelectionChange={(keys) => {
+                const selectedKey = Array.from(keys)[0];
                 setFilters({
                   ...filters,
-                  category_id: Number(e.target.value),
+                  category_id: selectedKey ? Number(selectedKey) : undefined,
                 });
               }}
             >
               {(categories || []).map((cat) => (
-                <SelectItem key={cat.id}>{cat.name}</SelectItem>
+                <SelectItem key={String(cat.id)}>{cat.name}</SelectItem>
               ))}
             </Select>
 
@@ -201,17 +213,20 @@ export default function TransactionsPage() {
               className="flex-1 min-w-[150px]"
               label="Ví"
               selectedKeys={
-                filters.wallet_id ? [String(filters.wallet_id)] : []
+                filters.wallet_id
+                  ? new Set([String(filters.wallet_id)])
+                  : new Set([])
               }
-              onChange={(e) => {
+              onSelectionChange={(keys) => {
+                const selectedKey = Array.from(keys)[0];
                 setFilters({
                   ...filters,
-                  wallet_id: Number(e.target.value),
+                  wallet_id: selectedKey ? Number(selectedKey) : undefined,
                 });
               }}
             >
               {(wallets || []).map((wallet) => (
-                <SelectItem key={wallet.id}>{wallet.name}</SelectItem>
+                <SelectItem key={String(wallet.id)}>{wallet.name}</SelectItem>
               ))}
             </Select>
 
@@ -335,10 +350,13 @@ export default function TransactionsPage() {
                   errorMessage={errors.type?.message}
                   isInvalid={!!errors.type}
                   label="Loại giao dịch"
-                  selectedKeys={[transactionType]}
-                  onChange={(e) =>
-                    setValue("type", e.target.value as TransactionType)
-                  }
+                  selectedKeys={new Set([transactionType])}
+                  onSelectionChange={(keys) => {
+                    const selectedKey = Array.from(keys)[0];
+                    if (selectedKey) {
+                      setValue("type", selectedKey as TransactionType);
+                    }
+                  }}
                 >
                   <SelectItem key="INCOME">Thu nhập</SelectItem>
                   <SelectItem key="EXPENSE">Chi tiêu</SelectItem>
@@ -366,14 +384,20 @@ export default function TransactionsPage() {
                   errorMessage={errors.category_id?.message}
                   isInvalid={!!errors.category_id}
                   label="Danh mục"
+                  disallowEmptySelection
                   selectedKeys={
-                    watch("category_id") ? [String(watch("category_id"))] : []
+                    watch("category_id")
+                      ? new Set([String(watch("category_id"))])
+                      : new Set([])
                   }
-                  onChange={(e) => {
-                    setValue("category_id", Number(e.target.value), {
-                      shouldDirty: true,
-                      shouldValidate: true,
-                    });
+                  onSelectionChange={(keys) => {
+                    const selectedKey = Array.from(keys)[0];
+                    if (selectedKey) {
+                      setValue("category_id", Number(selectedKey), {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
+                    }
                   }}
                 >
                   {(categories || []).map((cat) => (
@@ -386,13 +410,19 @@ export default function TransactionsPage() {
                   isInvalid={!!errors.wallet_id}
                   label="Ví"
                   selectedKeys={
-                    watch("wallet_id") ? [String(watch("wallet_id"))] : []
+                    watch("wallet_id")
+                      ? new Set([String(watch("wallet_id"))])
+                      : new Set([])
                   }
-                  onChange={(e) => {
-                    setValue("wallet_id", Number(e.target.value), {
-                      shouldDirty: true,
-                      shouldValidate: true,
-                    });
+                  onSelectionChange={(keys) => {
+                    const selectedKey = Array.from(keys)[0];
+                    if (selectedKey) {
+                      const walletId = Number(selectedKey);
+                      setValue("wallet_id", walletId, {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
+                    }
                   }}
                 >
                   {(wallets || []).map((wallet) => (
@@ -407,16 +437,20 @@ export default function TransactionsPage() {
                     errorMessage={errors.to_wallet_id?.message}
                     isInvalid={!!errors.to_wallet_id}
                     label="Ví đích"
+                    disallowEmptySelection
                     selectedKeys={
                       watch("to_wallet_id")
-                        ? [String(watch("to_wallet_id"))]
-                        : []
+                        ? new Set([String(watch("to_wallet_id"))])
+                        : new Set([])
                     }
-                    onChange={(e) => {
-                      setValue("to_wallet_id", Number(e.target.value), {
-                        shouldDirty: true,
-                        shouldValidate: true,
-                      });
+                    onSelectionChange={(keys) => {
+                      const selectedKey = Array.from(keys)[0];
+                      if (selectedKey) {
+                        setValue("to_wallet_id", Number(selectedKey), {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }
                     }}
                   >
                     {(wallets || []).map((wallet) => (

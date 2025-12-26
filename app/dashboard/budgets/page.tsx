@@ -142,7 +142,7 @@ export default function BudgetsPage() {
               pushToast("error", "Cập nhật ngân sách thất bại");
               setIsSaving(false);
             },
-          },
+          }
         );
       } else {
         createBudget(
@@ -160,7 +160,7 @@ export default function BudgetsPage() {
               pushToast("error", "Tạo ngân sách thất bại");
               setIsSaving(false);
             },
-          },
+          }
         );
       }
     } catch (error) {
@@ -198,7 +198,7 @@ export default function BudgetsPage() {
           refetchBudgets();
         },
         onError: (err) => console.error("Delete budget error:", err),
-      },
+      }
     );
   };
 
@@ -218,9 +218,9 @@ export default function BudgetsPage() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(amount);
   };
 
@@ -263,12 +263,14 @@ export default function BudgetsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">Quản lý Ngân sách</h1> 
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+            Quản lý Ngân sách
+          </h1>
           <p className="text-gray-500">Theo dõi và kiểm soát chi tiêu</p>
         </div>
         <Button
           className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
-// xoá icon và đổi color text
+          // xoá icon và đổi color text
           onPress={handleAddNew}
         >
           Tạo ngân sách
@@ -364,7 +366,7 @@ export default function BudgetsPage() {
                       showValueLabel
                       color={getProgressColor(
                         budget.usage_percentage || 0,
-                        budget.is_exceeded,
+                        budget.is_exceeded
                       )}
                       size="lg"
                       value={Math.min(budget.usage_percentage || 0, 100)}
@@ -461,7 +463,9 @@ export default function BudgetsPage() {
                   isInvalid={!!errors.categoryId}
                   label="Danh mục"
                   selectedKeys={
-                    watch("categoryId") ? [watch("categoryId")] : []
+                    watch("categoryId")
+                      ? new Set([String(watch("categoryId"))])
+                      : new Set([])
                   }
                   onSelectionChange={(keys) => {
                     const selectedKey = Array.from(keys)[0];

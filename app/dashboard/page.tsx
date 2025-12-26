@@ -89,7 +89,7 @@ export default function DashboardPage() {
       return {
         date_from: format(
           startOfDay(startOfMonth(now)),
-          "yyyy-MM-dd'T'HH:mm:ss",
+          "yyyy-MM-dd'T'HH:mm:ss"
         ),
         date_to: format(endOfDay(endOfMonth(now)), "yyyy-MM-dd'T'HH:mm:ss"),
       };
@@ -113,7 +113,7 @@ export default function DashboardPage() {
   console.log("spendingByCategory:", spendingByCategory);
   const trendFrom = format(
     startOfDay(subMonths(new Date(), 5)),
-    "yyyy-MM-dd'T'HH:mm:ss",
+    "yyyy-MM-dd'T'HH:mm:ss"
   );
   const trendTo = format(endOfDay(new Date()), "yyyy-MM-dd'T'HH:mm:ss");
   const { data: spendingTrend } =
@@ -132,7 +132,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setLoading(
-      !spendingByCategory || !spendingTrend || !topCategories || !wallets,
+      !spendingByCategory || !spendingTrend || !topCategories || !wallets
     );
     if (spendingByCategory && spendingTrend && topCategories && wallets) {
       // Map API responses to AnalyticsData
@@ -141,15 +141,15 @@ export default function DashboardPage() {
         income: 0,
         expense: (spendingByCategory || []).reduce(
           (s: number, c: any) => s + (c.amount || 0),
-          0,
+          0
         ),
         balance: (wallets || []).reduce(
           (s: number, w: any) => s + (w.balance || 0),
-          0,
+          0
         ),
         totalBalance: (wallets || []).reduce(
           (s: number, w: any) => s + (w.balance || 0),
-          0,
+          0
         ),
       };
 
@@ -181,7 +181,7 @@ export default function DashboardPage() {
 
       const totalBalance = mappedWallets.reduce(
         (s: number, w: any) => s + (w.balance || 0),
-        0,
+        0
       );
 
       summary.balance = totalBalance;
@@ -198,9 +198,9 @@ export default function DashboardPage() {
   }, [spendingByCategory, spendingTrend, topCategories, wallets, period]);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(amount);
   };
 
@@ -225,8 +225,12 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">Tổng quan tài chính</h1>
-          <p className="text-gray-500">Theo dõi thu nhập, chi tiêu và số dư của bạn bên dưới</p>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
+            Tổng quan tài chính
+          </h1>
+          <p className="text-gray-500">
+            Theo dõi thu nhập, chi tiêu và số dư của bạn bên dưới
+          </p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -337,7 +341,9 @@ export default function DashboardPage() {
               <ResponsiveContainer height={300} width="100%">
                 <PieChart>
                   <Pie
-                    label
+                    label={(entry) =>
+                      `${entry.category}: ${formatCurrency(entry.amount)}`
+                    }
                     cx="50%"
                     cy="50%"
                     data={analytics.expensesByCategory}
