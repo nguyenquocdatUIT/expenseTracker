@@ -201,9 +201,9 @@ export default function DashboardPage() {
         })) as AnalyticsData["expensesByCategory"];
 
       const topCats = (topCategories || []).map((t: any) => ({
-        category: t.category,
-        amount: t.amount,
-        count: t.count,
+        category: t.category_name || t.category,
+        amount: t.total_amount || t.amount,
+        count: t.transaction_count || t.count || 0,
       }));
 
       const monthlyTrend = (spendingTrend || []).map((t: any) => ({
