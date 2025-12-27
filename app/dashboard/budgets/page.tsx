@@ -55,6 +55,7 @@ export default function BudgetsPage() {
   const [loading, setLoading] = useState(true);
   const [editingBudget, setEditingBudget] = useState<any>(null);
   const [filter, setFilter] = useState<"all" | "active">("active");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -463,26 +464,32 @@ export default function BudgetsPage() {
                   isInvalid={!!errors.categoryId}
                   label="Danh mục"
                   selectedKeys={
-                    watch("categoryId")
-                      ? new Set([String(watch("categoryId"))])
+                    selectedCategoryId
+                      ? new Set([selectedCategoryId])
                       : new Set([])
                   }
                   onSelectionChange={(keys) => {
                     const selectedKey = Array.from(keys)[0];
 
                     if (selectedKey) {
+                      setSelectedCategoryId(String(selectedKey));
                       setValue("categoryId", String(selectedKey), {
                         shouldValidate: true,
                         shouldDirty: true,
                       });
                     }
                   }}
+                  items={(displayCategories || []).map((cat: any) => ({
+                    id: String(cat.id),
+                    name: cat.name,
+                    icon: cat.icon || "",
+                  }))}
                 >
-                  {displayCategories.map((cat: any) => (
-                    <SelectItem key={String(cat.id)}>
-                      {cat.icon} {cat.name}
+                  {(item: any) => (
+                    <SelectItem key={item.id} textValue={item.name}>
+                      {item.icon} {item.name}
                     </SelectItem>
-                  ))}
+                  )}
                 </Select>
 
                 <div className="grid grid-cols-2 gap-4">

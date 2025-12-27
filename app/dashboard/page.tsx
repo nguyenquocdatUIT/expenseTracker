@@ -5,6 +5,8 @@ import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Button } from "@heroui/button";
 import { Spinner } from "@heroui/spinner";
 import { Chip } from "@heroui/chip";
+import { Input } from "@heroui/input";
+import { Select, SelectItem } from "@heroui/select";
 import Link from "next/link";
 import {
   PieChart,
@@ -35,6 +37,7 @@ import {
   useGetSpendingTrendV1AnalyticsSpendingTrendGet,
   useGetTopCategoriesV1AnalyticsTopCategoriesGet,
   useGetWalletsV1WalletsGet,
+  useGetCategoriesV1CategoriesGet,
   exportTransactionsCsvV1ReportsTransactionsCsvGet,
   exportTransactionsPdfV1ReportsTransactionsPdfGet,
 } from "@/lib/api";
@@ -81,11 +84,27 @@ const COLORS = [
 export default function DashboardPage() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [period, setPeriod] = useState<"month" | "year">("month");
+  const [period, setPeriod] = useState<"month" | "year" | "custom">("month");
+  const [customDateFrom, setCustomDateFrom] = useState("");
+  const [customDateTo, setCustomDateTo] = useState("");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
 
   // compute date range for API calls based on `period`
   const getDateRange = () => {
     const now = new Date();
+
+    if (period === "custom" && customDateFrom && customDateTo) {
+      return {
+        date_from: format(
+          startOfDay(new Date(customDateFrom)),
+          "yyyy-MM-dd'T'HH:mm:ss"
+        ),
+        date_to: format(
+          endOfDay(new Date(customDateTo)),
+          "yyyy-MM-dd'T'HH:mm:ss"
+        ),
+      };
+    }
 
     if (period === "month") {
       return {
@@ -131,20 +150,27 @@ export default function DashboardPage() {
       limit: 5,
     });
   const { data: wallets } = useGetWalletsV1WalletsGet();
+  const { data: categories } = useGetCategoriesV1CategoriesGet();
 
   useEffect(() => {
     setLoading(
       !spendingByCategory || !spendingTrend || !topCategories || !wallets
     );
     if (spendingByCategory && spendingTrend && topCategories && wallets) {
+      // Calculate total income and expense from spending trend
+      const totalIncome = (spendingTrend || []).reduce(
+        (s: number, t: any) => s + (t.total_income || 0),
+        0
+      );
+      const totalExpense = (spendingTrend || []).reduce(
+        (s: number, t: any) => s + (t.total_expense || 0),
+        0
+      );
+
       // Map API responses to AnalyticsData
       const summary = {
-        // The API doesn't provide income summary directly here; estimate expense from spendingTrend sums and set income to 0 for now.
-        income: 0,
-        expense: (spendingByCategory || []).reduce(
-          (s: number, c: any) => s + (c.amount || 0),
-          0
-        ),
+        income: totalIncome,
+        expense: totalExpense,
         balance: (wallets || []).reduce(
           (s: number, w: any) => s + (w.balance || 0),
           0
@@ -155,12 +181,24 @@ export default function DashboardPage() {
         ),
       };
 
-      const expensesByCategory = (spendingByCategory || []).map((c: any) => ({
-        category: c.category_name || c.category || c.name,
-        amount: Number(c.total_amount ?? c.amount ?? 0),
-        color: c.color,
-        icon: c.icon,
-      })) as AnalyticsData["expensesByCategory"];
+      const expensesByCategory = (spendingByCategory || [])
+        .filter((c: any) => {
+          // Filter by category if selected
+          if (selectedCategoryId) {
+            const categoryName = c.category_name || c.category || c.name;
+            const selectedCategory = (categories || []).find(
+              (cat: any) => String(cat.id) === selectedCategoryId
+            );
+            return categoryName === selectedCategory?.name;
+          }
+          return true;
+        })
+        .map((c: any) => ({
+          category: c.category_name || c.category || c.name,
+          amount: Number(c.total_amount ?? c.amount ?? 0),
+          color: c.color,
+          icon: c.icon,
+        })) as AnalyticsData["expensesByCategory"];
 
       const topCats = (topCategories || []).map((t: any) => ({
         category: t.category,
@@ -169,10 +207,10 @@ export default function DashboardPage() {
       }));
 
       const monthlyTrend = (spendingTrend || []).map((t: any) => ({
-        month: t.label || t.month || t.date,
-        income: t.income || 0,
-        expense: t.expense || t.amount || 0,
-        balance: (t.income || 0) - (t.expense || t.amount || 0),
+        month: t.period || t.label || t.month || t.date,
+        income: t.total_income || 0,
+        expense: t.total_expense || 0,
+        balance: (t.total_income || 0) - (t.total_expense || 0),
       }));
 
       const mappedWallets = (wallets || []).map((w: any) => ({
@@ -197,7 +235,17 @@ export default function DashboardPage() {
         wallets: mappedWallets,
       });
     }
-  }, [spendingByCategory, spendingTrend, topCategories, wallets, period]);
+  }, [
+    spendingByCategory,
+    spendingTrend,
+    topCategories,
+    wallets,
+    period,
+    selectedCategoryId,
+    customDateFrom,
+    customDateTo,
+    categories,
+  ]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -234,33 +282,120 @@ export default function DashboardPage() {
             Theo dõi thu nhập, chi tiêu và số dư của bạn bên dưới
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button
-            className={
-              period === "month"
-                ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
-                : "text-sky-600 hover:bg-sky-50"
-            }
-            size="sm"
-            variant={period === "month" ? "solid" : "flat"}
-            onClick={() => setPeriod("month")}
-          >
-            Tháng này
-          </Button>
-          <Button
-            className={
-              period === "year"
-                ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
-                : "text-sky-600 hover:bg-sky-50"
-            }
-            size="sm"
-            variant={period === "year" ? "solid" : "flat"}
-            onClick={() => setPeriod("year")}
-          >
-            Năm này
-          </Button>
-        </div>
       </div>
+
+      {/* Filters */}
+      <Card className="border-gray-200 dark:border-gray-700">
+        <CardBody>
+          <div className="flex flex-col gap-4">
+            {/* Period Buttons */}
+            <div className="flex gap-2 flex-wrap">
+              <Button
+                className={
+                  period === "month"
+                    ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
+                    : "text-sky-600 hover:bg-sky-50"
+                }
+                size="sm"
+                variant={period === "month" ? "solid" : "flat"}
+                onClick={() => setPeriod("month")}
+              >
+                Tháng này
+              </Button>
+              <Button
+                className={
+                  period === "year"
+                    ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
+                    : "text-sky-600 hover:bg-sky-50"
+                }
+                size="sm"
+                variant={period === "year" ? "solid" : "flat"}
+                onClick={() => setPeriod("year")}
+              >
+                Năm này
+              </Button>
+              <Button
+                className={
+                  period === "custom"
+                    ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
+                    : "text-sky-600 hover:bg-sky-50"
+                }
+                size="sm"
+                variant={period === "custom" ? "solid" : "flat"}
+                onClick={() => setPeriod("custom")}
+              >
+                Tùy chỉnh
+              </Button>
+            </div>
+
+            {/* Custom Date Range & Category Filter */}
+            <div className="flex flex-row gap-3 flex-wrap items-end">
+              {period === "custom" && (
+                <>
+                  <Input
+                    label="Từ ngày"
+                    type="date"
+                    value={customDateFrom}
+                    onChange={(e) => setCustomDateFrom(e.target.value)}
+                    className="flex-1 min-w-[150px]"
+                  />
+                  <Input
+                    label="Đến ngày"
+                    type="date"
+                    value={customDateTo}
+                    onChange={(e) => setCustomDateTo(e.target.value)}
+                    className="flex-1 min-w-[150px]"
+                  />
+                </>
+              )}
+              <Select
+                label="Danh mục"
+                placeholder="Tất cả danh mục"
+                selectedKeys={
+                  selectedCategoryId
+                    ? new Set([selectedCategoryId])
+                    : new Set([])
+                }
+                onSelectionChange={(keys) => {
+                  const selectedKey = Array.from(keys)[0];
+                  setSelectedCategoryId(selectedKey ? String(selectedKey) : "");
+                }}
+                className="flex-1 min-w-[200px]"
+                items={[
+                  { id: "", name: "Tất cả", icon: "" },
+                  ...(categories || []).map((cat: any) => ({
+                    id: String(cat.id),
+                    name: cat.name,
+                    icon: cat.icon || "",
+                  })),
+                ]}
+              >
+                {(item: any) => (
+                  <SelectItem key={item.id} textValue={item.name}>
+                    {item.icon} {item.name}
+                  </SelectItem>
+                )}
+              </Select>
+              {(selectedCategoryId ||
+                (period === "custom" && customDateFrom && customDateTo)) && (
+                <Button
+                  variant="flat"
+                  color="danger"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedCategoryId("");
+                    setCustomDateFrom("");
+                    setCustomDateTo("");
+                    setPeriod("month");
+                  }}
+                >
+                  Xóa bộ lọc
+                </Button>
+              )}
+            </div>
+          </div>
+        </CardBody>
+      </Card>
 
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-4">

@@ -487,20 +487,30 @@ export default function RecurringTransactionsPage() {
                   isInvalid={!!errors.categoryId}
                   label="Danh mục"
                   selectedKeys={
-                    watch("categoryId") ? [String(watch("categoryId"))] : []
+                    watch("categoryId")
+                      ? new Set([String(watch("categoryId"))])
+                      : new Set([])
                   }
-                  onChange={(e) =>
-                    setValue("categoryId", String(e.target.value), {
-                      shouldValidate: true,
-                      shouldDirty: true,
-                    })
-                  }
+                  onSelectionChange={(keys) => {
+                    const selectedKey = Array.from(keys)[0];
+                    if (selectedKey) {
+                      setValue("categoryId", String(selectedKey), {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }
+                  }}
+                  items={(filteredCategories || []).map((cat: any) => ({
+                    id: String(cat.id),
+                    name: cat.name,
+                    icon: cat.icon || "",
+                  }))}
                 >
-                  {filteredCategories.map((cat: any) => (
-                    <SelectItem key={String(cat.id)}>
-                      {cat.icon} {cat.name}
+                  {(item: any) => (
+                    <SelectItem key={item.id} textValue={item.name}>
+                      {item.icon} {item.name}
                     </SelectItem>
-                  ))}
+                  )}
                 </Select>
 
                 <Select
@@ -508,20 +518,29 @@ export default function RecurringTransactionsPage() {
                   isInvalid={!!errors.walletId}
                   label="Ví"
                   selectedKeys={
-                    watch("walletId") ? [String(watch("walletId"))] : []
+                    watch("walletId")
+                      ? new Set([String(watch("walletId"))])
+                      : new Set([])
                   }
-                  onChange={(e) =>
-                    setValue("walletId", String(e.target.value), {
-                      shouldValidate: true,
-                      shouldDirty: true,
-                    })
-                  }
+                  onSelectionChange={(keys) => {
+                    const selectedKey = Array.from(keys)[0];
+                    if (selectedKey) {
+                      setValue("walletId", String(selectedKey), {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }
+                  }}
+                  items={(displayWallets || []).map((wallet: any) => ({
+                    id: String(wallet.id),
+                    name: wallet.name,
+                  }))}
                 >
-                  {displayWallets.map((wallet: any) => (
-                    <SelectItem key={String(wallet.id)}>
-                      {wallet.name}
+                  {(item: any) => (
+                    <SelectItem key={item.id} textValue={item.name}>
+                      {item.name}
                     </SelectItem>
-                  ))}
+                  )}
                 </Select>
 
                 <div className="grid grid-cols-2 gap-4">

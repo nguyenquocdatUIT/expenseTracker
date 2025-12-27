@@ -31,6 +31,7 @@ import { format } from "date-fns";
 import {
   useGetTransactionsV1TransactionsGet,
   useCreateTransactionV1TransactionsPost,
+  useUpdateTransactionV1TransactionsTransactionIdPatch,
   useDeleteTransactionV1TransactionsTransactionIdDelete,
   useGetCategoriesV1CategoriesGet,
   useGetWalletsV1WalletsGet,
@@ -51,6 +52,7 @@ type TransactionFormData = z.infer<typeof transactionSchema>;
 
 export default function TransactionsPage() {
   const [page, setPage] = useState(1);
+  const [editingTransaction, setEditingTransaction] = useState<any>(null);
   const [filters, setFilters] = useState<{
     transaction_type?: TransactionType;
     category_id?: number;
@@ -81,6 +83,8 @@ export default function TransactionsPage() {
   // Mutations
   const { mutate: createTransaction, isPending: isCreating } =
     useCreateTransactionV1TransactionsPost();
+  const { mutate: updateTransaction, isPending: isUpdating } =
+    useUpdateTransactionV1TransactionsTransactionIdPatch();
   const { mutate: deleteTransaction } =
     useDeleteTransactionV1TransactionsTransactionIdDelete();
 
@@ -103,22 +107,55 @@ export default function TransactionsPage() {
   const transactionType = watch("type");
 
   const onSubmit = handleSubmit(async (data: TransactionFormData) => {
-    createTransaction(
-      { data },
-      {
-        onSuccess: () => {
-          onClose();
-          reset({
-            type: "EXPENSE",
-            date: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
-          });
-          refetch();
+    if (editingTransaction) {
+      // Update existing transaction
+      updateTransaction(
+        {
+          transactionId: editingTransaction.id,
+          data: {
+            type: data.type,
+            amount: data.amount,
+            date: data.date,
+            description: data.description || null,
+            category_id: data.category_id || null,
+            wallet_id: data.wallet_id || null,
+            to_wallet_id: data.to_wallet_id || null,
+          },
         },
-        onError: (error) => {
-          console.error("Error creating transaction:", error);
-        },
-      }
-    );
+        {
+          onSuccess: () => {
+            onClose();
+            setEditingTransaction(null);
+            reset({
+              type: "EXPENSE",
+              date: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+            });
+            refetch();
+          },
+          onError: (error) => {
+            console.error("Error updating transaction:", error);
+          },
+        }
+      );
+    } else {
+      // Create new transaction
+      createTransaction(
+        { data },
+        {
+          onSuccess: () => {
+            onClose();
+            reset({
+              type: "EXPENSE",
+              date: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+            });
+            refetch();
+          },
+          onError: (error) => {
+            console.error("Error creating transaction:", error);
+          },
+        }
+      );
+    }
   });
 
   const handleDelete = (transactionId: number) => {
@@ -142,9 +179,24 @@ export default function TransactionsPage() {
   };
 
   const handleAddNew = () => {
+    setEditingTransaction(null);
     reset({
       type: "EXPENSE",
       date: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+    });
+    onOpen();
+  };
+
+  const handleEdit = (transaction: any) => {
+    setEditingTransaction(transaction);
+    reset({
+      type: transaction.type as TransactionType,
+      amount: transaction.amount,
+      date: format(new Date(transaction.date), "yyyy-MM-dd'T'HH:mm"),
+      description: transaction.description || "",
+      category_id: transaction.category_id || undefined,
+      wallet_id: transaction.wallet_id || undefined,
+      to_wallet_id: transaction.to_wallet_id || undefined,
     });
     onOpen();
   };
@@ -203,10 +255,16 @@ export default function TransactionsPage() {
                   category_id: selectedKey ? Number(selectedKey) : undefined,
                 });
               }}
+              items={(categories || []).map((cat) => ({
+                id: String(cat.id),
+                name: cat.name,
+              }))}
             >
-              {(categories || []).map((cat) => (
-                <SelectItem key={String(cat.id)}>{cat.name}</SelectItem>
-              ))}
+              {(item: any) => (
+                <SelectItem key={item.id} textValue={item.name}>
+                  {item.name}
+                </SelectItem>
+              )}
             </Select>
 
             <Select
@@ -224,10 +282,16 @@ export default function TransactionsPage() {
                   wallet_id: selectedKey ? Number(selectedKey) : undefined,
                 });
               }}
+              items={(wallets || []).map((wallet) => ({
+                id: String(wallet.id),
+                name: wallet.name,
+              }))}
             >
-              {(wallets || []).map((wallet) => (
-                <SelectItem key={String(wallet.id)}>{wallet.name}</SelectItem>
-              ))}
+              {(item: any) => (
+                <SelectItem key={item.id} textValue={item.name}>
+                  {item.name}
+                </SelectItem>
+              )}
             </Select>
 
             <Button
@@ -297,14 +361,24 @@ export default function TransactionsPage() {
                     <TableCell>{transaction.wallet?.name || "—"}</TableCell>
                     <TableCell>{transaction.description || "—"}</TableCell>
                     <TableCell>
-                      <Button
-                        color="danger"
-                        size="sm"
-                        variant="light"
-                        onPress={() => handleDelete(transaction.id)}
-                      >
-                        Xóa
-                      </Button>
+                      <div className="flex gap-1">
+                        <Button
+                          color="primary"
+                          size="sm"
+                          variant="light"
+                          onPress={() => handleEdit(transaction)}
+                        >
+                          Sửa
+                        </Button>
+                        <Button
+                          color="danger"
+                          size="sm"
+                          variant="light"
+                          onPress={() => handleDelete(transaction.id)}
+                        >
+                          Xóa
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -338,11 +412,18 @@ export default function TransactionsPage() {
         </CardBody>
       </Card>
 
-      <Modal isOpen={isOpen} size="2xl" onClose={onClose}>
+      <Modal
+        isOpen={isOpen}
+        size="2xl"
+        onClose={() => {
+          onClose();
+          setEditingTransaction(null);
+        }}
+      >
         <ModalContent>
           <form onSubmit={onSubmit}>
             <ModalHeader className="flex flex-col gap-1 bg-gradient-to-r from-sky-500 to-blue-600 text-white">
-              Thêm giao dịch mới
+              {editingTransaction ? "Sửa giao dịch" : "Thêm giao dịch mới"}
             </ModalHeader>
             <ModalBody className="py-6">
               <div className="space-y-4">
@@ -399,10 +480,16 @@ export default function TransactionsPage() {
                       });
                     }
                   }}
+                  items={(categories || []).map((cat) => ({
+                    id: String(cat.id),
+                    name: cat.name,
+                  }))}
                 >
-                  {(categories || []).map((cat) => (
-                    <SelectItem key={String(cat.id)}>{cat.name}</SelectItem>
-                  ))}
+                  {(item: any) => (
+                    <SelectItem key={item.id} textValue={item.name}>
+                      {item.name}
+                    </SelectItem>
+                  )}
                 </Select>
 
                 <Select
@@ -424,12 +511,17 @@ export default function TransactionsPage() {
                       });
                     }
                   }}
+                  items={(wallets || []).map((wallet) => ({
+                    id: String(wallet.id),
+                    name: wallet.name,
+                    balance: wallet.balance,
+                  }))}
                 >
-                  {(wallets || []).map((wallet) => (
-                    <SelectItem key={String(wallet.id)}>
-                      {wallet.name} - {formatCurrency(wallet.balance)}
+                  {(item: any) => (
+                    <SelectItem key={item.id} textValue={item.name}>
+                      {item.name} - {formatCurrency(item.balance)}
                     </SelectItem>
-                  ))}
+                  )}
                 </Select>
 
                 {transactionType === "TRANSFER" && (
@@ -452,12 +544,17 @@ export default function TransactionsPage() {
                         });
                       }
                     }}
+                    items={(wallets || []).map((wallet) => ({
+                      id: String(wallet.id),
+                      name: wallet.name,
+                      balance: wallet.balance,
+                    }))}
                   >
-                    {(wallets || []).map((wallet) => (
-                      <SelectItem key={String(wallet.id)}>
-                        {wallet.name} - {formatCurrency(wallet.balance)}
+                    {(item: any) => (
+                      <SelectItem key={item.id} textValue={item.name}>
+                        {item.name} - {formatCurrency(item.balance)}
                       </SelectItem>
-                    ))}
+                    )}
                   </Select>
                 )}
 
@@ -469,15 +566,21 @@ export default function TransactionsPage() {
               </div>
             </ModalBody>
             <ModalFooter>
-              <Button variant="light" onPress={onClose}>
+              <Button
+                variant="light"
+                onPress={() => {
+                  onClose();
+                  setEditingTransaction(null);
+                }}
+              >
                 Hủy
               </Button>
               <Button
                 className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold"
-                isLoading={isCreating}
+                isLoading={isCreating || isUpdating}
                 type="submit"
               >
-                Thêm
+                {editingTransaction ? "Cập nhật" : "Thêm"}
               </Button>
             </ModalFooter>
           </form>
