@@ -107,6 +107,9 @@ export default function TransactionsPage() {
   const transactionType = watch("type");
 
   const onSubmit = handleSubmit(async (data: TransactionFormData) => {
+    // Convert local datetime to ISO string to preserve timezone
+    const isoDate = new Date(data.date).toISOString();
+
     if (editingTransaction) {
       // Update existing transaction
       updateTransaction(
@@ -115,7 +118,7 @@ export default function TransactionsPage() {
           data: {
             type: data.type,
             amount: data.amount,
-            date: data.date,
+            date: isoDate,
             description: data.description || null,
             category_id: data.category_id || null,
             wallet_id: data.wallet_id || null,
@@ -140,7 +143,7 @@ export default function TransactionsPage() {
     } else {
       // Create new transaction
       createTransaction(
-        { data },
+        { data: { ...data, date: isoDate } },
         {
           onSuccess: () => {
             onClose();
