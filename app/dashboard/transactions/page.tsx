@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
@@ -35,6 +36,9 @@ import {
   useDeleteTransactionV1TransactionsTransactionIdDelete,
   useGetCategoriesV1CategoriesGet,
   useGetWalletsV1WalletsGet,
+  getBudgetsV1BudgetsGet,
+  getGetWalletsV1WalletsGetQueryKey,
+  getGetBudgetsV1BudgetsGetQueryKey,
   type TransactionType,
 } from "@/lib/api";
 
@@ -60,6 +64,20 @@ export default function TransactionsPage() {
   }>({});
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const queryClient = useQueryClient();
+
+  // Toast state for budget warnings
+  const [toasts, setToasts] = useState<
+    { id: number; type: "success" | "warning" | "error"; message: string }[]
+  >([]);
+
+  const pushToast = (type: "success" | "warning" | "error", message: string) => {
+    const id = Date.now() + Math.floor(Math.random() * 1000);
+    setToasts((t) => [...t, { id, type, message }]);
+    setTimeout(() => {
+      setToasts((t) => t.filter((x) => x.id !== id));
+    }, 5000);
+  };
 
   // Fetch data
   const {
@@ -134,6 +152,8 @@ export default function TransactionsPage() {
               date: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
             });
             refetch();
+            // Invalidate wallets cache to refresh balances
+            queryClient.invalidateQueries({ queryKey: getGetWalletsV1WalletsGetQueryKey() });
           },
           onError: (error) => {
             console.error("Error updating transaction:", error);
@@ -145,13 +165,44 @@ export default function TransactionsPage() {
       createTransaction(
         { data: { ...data, date: isoDate } },
         {
-          onSuccess: () => {
+          onSuccess: async () => {
             onClose();
             reset({
               type: "EXPENSE",
               date: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
             });
             refetch();
+            // Invalidate wallets and budgets cache
+            queryClient.invalidateQueries({ queryKey: getGetWalletsV1WalletsGetQueryKey() });
+            queryClient.invalidateQueries({ queryKey: getGetBudgetsV1BudgetsGetQueryKey() });
+
+            // Fetch fresh budget data directly and check for exceeded limits
+            // Only check budget for the selected category
+            if (data.category_id) {
+              try {
+                const budgetsData = await getBudgetsV1BudgetsGet();
+                if (budgetsData && budgetsData.length > 0) {
+                  // Filter to only the budget matching the selected category
+                  const relevantBudget = budgetsData.find((b) => b.category_id === data.category_id);
+
+                  if (relevantBudget) {
+                    if (relevantBudget.is_exceeded) {
+                      pushToast(
+                        "error",
+                        `⚠️ Ngân sách "${relevantBudget.category?.name || 'Không tên'}" đã vượt quá giới hạn! (${Math.round(relevantBudget.usage_percentage)}%)`
+                      );
+                    } else if (relevantBudget.is_near_limit) {
+                      pushToast(
+                        "warning",
+                        `📊 Ngân sách "${relevantBudget.category?.name || 'Không tên'}" sắp đạt giới hạn (${Math.round(relevantBudget.usage_percentage)}%)`
+                      );
+                    }
+                  }
+                }
+              } catch (err) {
+                console.error("Error fetching budgets for notification:", err);
+              }
+            }
           },
           onError: (error) => {
             console.error("Error creating transaction:", error);
@@ -168,6 +219,8 @@ export default function TransactionsPage() {
         {
           onSuccess: () => {
             refetch();
+            // Invalidate wallets cache to refresh balances
+            queryClient.invalidateQueries({ queryKey: getGetWalletsV1WalletsGetQueryKey() });
           },
         }
       );
@@ -206,6 +259,23 @@ export default function TransactionsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Toast container for budget warnings */}
+      <div className="fixed right-4 top-4 z-50 flex flex-col gap-3">
+        {toasts.map((t) => (
+          <div
+            key={t.id}
+            className={`max-w-sm px-4 py-3 rounded-lg shadow-lg text-white transition-all ${t.type === "success"
+              ? "bg-green-600"
+              : t.type === "warning"
+                ? "bg-amber-500"
+                : "bg-red-600"
+              }`}
+          >
+            {t.message}
+          </div>
+        ))}
+      </div>
+
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
           Giao dịch
