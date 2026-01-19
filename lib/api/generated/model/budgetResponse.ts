@@ -18,6 +18,7 @@ export interface BudgetResponse {
   category_id: number;
   category?: BudgetResponseCategory;
   amount_limit: number;
+  alert_threshold: number;
   period_type: string;
   start_date?: BudgetResponseStartDate;
   end_date?: BudgetResponseEndDate;

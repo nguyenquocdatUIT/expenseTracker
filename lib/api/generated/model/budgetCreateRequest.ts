@@ -15,6 +15,8 @@ export interface BudgetCreateRequest {
   category_id: number;
   /** */
   amount_limit: number;
+  /* Warning threshold percentage (default 80.0) */
+  alert_threshold?: number;
   period_type: PeriodType;
   start_date?: BudgetCreateRequestStartDate;
   end_date?: BudgetCreateRequestEndDate;

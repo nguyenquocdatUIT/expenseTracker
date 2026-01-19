@@ -123,6 +123,7 @@ export default function BudgetsPage() {
         period_type: data.period as any,
         start_date: data.startDate || undefined,
         end_date: data.endDate || undefined,
+        alert_threshold: data.alertAt,
       };
 
       setIsSaving(true);
@@ -171,6 +172,8 @@ export default function BudgetsPage() {
 
   const handleEdit = (budget: any) => {
     setEditingBudget(budget);
+    // Set the selectedCategoryId state to display correctly in the dropdown
+    setSelectedCategoryId(String(budget.category_id));
     reset({
       name: budget.category?.name || "",
       amount: budget.amount_limit,
@@ -182,8 +185,8 @@ export default function BudgetsPage() {
         ? format(new Date(budget.end_date), "yyyy-MM-dd")
         : "",
       categoryId: String(budget.category_id),
-      alertEnabled: budget.is_near_limit,
-      alertAt: Math.round(budget.usage_percentage || 0),
+      alertEnabled: true,
+      alertAt: budget.alert_threshold || 80,
       isRecurring: true,
     });
     onOpen();
@@ -253,9 +256,8 @@ export default function BudgetsPage() {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`max-w-sm px-4 py-2 rounded shadow-lg text-white ${
-              t.type === "success" ? "bg-green-600" : "bg-red-600"
-            }`}
+            className={`max-w-sm px-4 py-2 rounded shadow-lg text-white ${t.type === "success" ? "bg-green-600" : "bg-red-600"
+              }`}
           >
             {t.message}
           </div>

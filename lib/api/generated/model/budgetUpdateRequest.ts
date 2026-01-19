@@ -14,6 +14,7 @@ import type { BudgetUpdateRequestEndDate } from "./budgetUpdateRequestEndDate";
  */
 export interface BudgetUpdateRequest {
   amount_limit?: BudgetUpdateRequestAmountLimit;
+  alert_threshold?: number;
   period_type?: BudgetUpdateRequestPeriodType;
   start_date?: BudgetUpdateRequestStartDate;
   end_date?: BudgetUpdateRequestEndDate;
